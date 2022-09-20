@@ -3,7 +3,6 @@ const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 
 let mongodbUrl = 'mongodb://localhost:27017';
-let srvMongodbUrl = 'mongodb+srv://WDE:Eb7514804@cluster0.bwa2nw4.mongodb.net/?retryWrites=true&w=majority';
 
 if (process.env.MONGODB_URL) {
 	mongodbUrl = process.env.MONGODB_URL;
@@ -12,7 +11,7 @@ if (process.env.MONGODB_URL) {
 let database;
 
 async function connectToDatabase() {
-  const client = await MongoClient.connect(srvMongodbUrl);
+  const client = await MongoClient.connect(mongodbUrl);
   database = client.db('online-shop');
 }
 
