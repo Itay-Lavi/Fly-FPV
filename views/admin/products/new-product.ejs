@@ -1,0 +1,17 @@
+<%- include('../../shared/includes/head', {pageTitle: 'Add new product'}) %>
+<link rel="stylesheet" href="/styles/forms.css">
+<script src="/scripts/image-preview.js" defer></script>
+</head>
+<body>
+<%- include('../../shared/includes/header') %>
+	<main>
+		<h1>Add new Product</h1>
+		<% if (product.hasError) {%>
+			<section class="alert">
+				<h2>Invalid Input</h2>
+				<p><%= product.message %></p>
+			</section>
+			<% }%>
+<%- include('includes/product-form', { submitPath: '/admin/products/', product: product, imageRequired: true}) %>
+	</main>
+<%- include('../../shared/includes/footer') %>
