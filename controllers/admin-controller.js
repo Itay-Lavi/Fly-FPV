@@ -95,7 +95,8 @@ async function updateProduct(req, res, next) {
   if (req.file) {
     try {
       const oldProduct = await Product.findById(req.params.id);
-      oldProduct.deleteImage();
+      oldProduct.deleteLocalImage();
+	  oldProduct.deleteCloudImage();
     } catch (error) {
       next(error);
       return;

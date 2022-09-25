@@ -1,8 +1,8 @@
-const fs = require("fs/promises");
-const path = require("path");
+const fs = require('fs/promises');
+const path = require('path');
+const cloudinary = require('../util/cloudinary-cloud');
 
 const { ObjectId } = require('mongodb');
-
 
 const db = require('../data/database');
 
@@ -13,11 +13,17 @@ class Product {
     this.price = +productData.price;
     this.description = productData.description;
     this.image = productData.image;
-    this.updateImageData();
+    this.imageUrl = productData.imageUrl;
+	this.publicId = productData.publicId;
+    this.updateImagePath();
 
     if (productData._id) {
       this.id = productData._id.toString();
     }
+  }
+
+  updateImagePath() {
+    this.imagePath = `product-data/images/${this.image}`;
   }
 
   static async findById(productId) {
@@ -50,10 +56,10 @@ class Product {
   }
 
   static async findMultiple(ids) {
-    const productIds = ids.map(function(id) {
+    const productIds = ids.map(function (id) {
       return new ObjectId(id);
-    }) 
-    
+    });
+
     const products = await db
       .getDb()
       .collection('products')
@@ -65,25 +71,26 @@ class Product {
     });
   }
 
-  updateImageData() {
-    this.imagePath = `product-data/images/${this.image}`;
-    this.imageUrl = `/products/assets/images/${this.image}`;
-  }
-
   async save() {
     const productData = {
       title: this.title,
       summary: this.summary,
       price: this.price,
       description: this.description,
-      image: this.image,
     };
 
+
     if (this.id) {
+      //Updating
       const productId = new ObjectId(this.id);
 
       if (!this.image) {
         delete productData.image;
+      } else {
+		const result = await cloudinary.uploadImage(this.imagePath);
+		productData.imageUrl = result.secure_url;
+		productData.publicId = result.public_id;
+        this.deleteLocalImage();
       }
 
       await db
@@ -91,28 +98,40 @@ class Product {
         .collection('products')
         .updateOne({ _id: productId }, { $set: productData });
     } else {
+      //New Product
+	  const result = await cloudinary.uploadImage(this.imagePath);
+      productData.imageUrl = result.secure_url;
+	  productData.publicId = result.public_id;
+      this.deleteLocalImage();
       await db.getDb().collection('products').insertOne(productData);
     }
   }
 
-   replaceImage(newImage) {
+  async replaceImage(newImage) {
     this.image = newImage;
-    this.updateImageData();
+    this.updateImagePath();
   }
 
   async delete() {
-	const productId = new ObjectId(this.id);
-	await db.getDb().collection('products').deleteOne({_id: productId});
+    const productId = new ObjectId(this.id);
+    await db.getDb().collection('products').deleteOne({ _id: productId });
 
-	await this.deleteImage();
+	await this.deleteCloudImage()
+    await this.deleteLocalImage();
   }
 
-  async deleteImage() {
-	const imageFullPath = path.join(__dirname, '..', this.imagePath)
-
-	await fs.unlink(imageFullPath);
+  async deleteLocalImage() {
+    const imageFullPath = path.join(__dirname, '..', this.imagePath);
+    try {
+      await fs.unlink(imageFullPath);
+	  this.image = null;
+	  this.updateImagePath();
+    } catch {}
   }
 
+  async deleteCloudImage() {
+	await cloudinary.deleteImage(this.publicId);
+  }
 }
 
 module.exports = Product;
