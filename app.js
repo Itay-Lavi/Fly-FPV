@@ -34,10 +34,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static('public'));
-app.use('/products/assets' ,express.static('product-data'));
+app.use('/products/assets', express.static('product-data'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
- 
+
 const sessionConfig = createSessionConfig();
 
 app.use(expressSession(sessionConfig));
@@ -52,9 +52,10 @@ app.use(checkAuthStatusMiddleware);
 app.use(baseRoutes);
 app.use(authRoutes);
 app.use(productsRoutes);
-app.use('/cart',cartRoutes);
-app.use('/orders', protectRoutesMiddleware, ordersRoutes);
-app.use('/admin', protectRoutesMiddleware, adminRoutes);
+app.use('/cart', cartRoutes);
+app.use(protectRoutesMiddleware);
+app.use('/orders', ordersRoutes);
+app.use('/admin', adminRoutes);
 
 app.use(notFoundMiddleware);
 

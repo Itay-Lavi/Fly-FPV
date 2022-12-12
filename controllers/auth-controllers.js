@@ -88,6 +88,7 @@ async function login(req, res) {
     password: req.body.password,
   };
 
+
   const user = new User(formData.email, formData.password);
   let existingUser;
   try {
