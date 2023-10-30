@@ -6,18 +6,20 @@ async function deleteProduct(event) {
   const productId = buttonElement.dataset.productid;
   const csrfToken = buttonElement.dataset.csrf;
 
+  const productItem = event.target.closest('li');
   try {
+    productsListElement.removeChild(productItem);
     const response = await fetch(`/admin/products/${productId}?_csrf=${csrfToken}`, {
       method: 'DELETE',
     });
 
     if (!response.ok) {
+    productsListElement.appendChild(productItem);
 		alert('Could not delete the product!');
 		return;
     }
-	
-	productsListElement.removeChild(event.path[4]);
-  } catch {
+  } catch (error) {
+    productsListElement.appendChild(productItem);
     alert('Could not send request - maybe try again later!');
   }
 }
