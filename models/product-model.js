@@ -14,7 +14,7 @@ class Product {
     this.description = productData.description;
     this.image = productData.image;
     this.imageUrl = productData.imageUrl;
-	this.publicId = productData.publicId;
+    this.publicId = productData.publicId;
     this.updateImagePath();
 
     if (productData._id) {
@@ -78,34 +78,42 @@ class Product {
       price: this.price,
       description: this.description,
     };
-
-
-    if (this.id) {
-      //Updating
-      const productId = new ObjectId(this.id);
-
-      if (!this.image) {
-        delete productData.image;
+  
+    try {
+      if (this.id) {
+        // Updating existing product
+        const productId = new ObjectId(this.id);
+  
+        if (this.image) {
+          const result = await cloudinary.uploadImage(this.imagePath);
+          productData.imageUrl = result.secure_url;
+          productData.publicId = result.public_id;
+          this.deleteLocalImage();
+        } else {
+          // If no new image, do not update image fields
+          delete productData.imageUrl;
+          delete productData.publicId;
+        }
+  
+        await db.getDb().collection('products').updateOne({ _id: productId }, { $set: productData });
       } else {
-		const result = await cloudinary.uploadImage(this.imagePath);
-		productData.imageUrl = result.secure_url;
-		productData.publicId = result.public_id;
-        this.deleteLocalImage();
+        // Creating a new product
+        if (this.image) {
+          const result = await cloudinary.uploadImage(this.imagePath);
+          productData.imageUrl = result.secure_url;
+          productData.publicId = result.public_id;
+          this.deleteLocalImage();
+        }
+  
+        await db.getDb().collection('products').insertOne(productData);
       }
-
-      await db
-        .getDb()
-        .collection('products')
-        .updateOne({ _id: productId }, { $set: productData });
-    } else {
-      //New Product
-	  const result = await cloudinary.uploadImage(this.imagePath);
-      productData.imageUrl = result.secure_url;
-	  productData.publicId = result.public_id;
+    } catch (error) {
       this.deleteLocalImage();
-      await db.getDb().collection('products').insertOne(productData);
+      console.error('Error occurred while saving product:', error);
+      throw error;
     }
   }
+
 
   async replaceImage(newImage) {
     this.image = newImage;
@@ -116,7 +124,7 @@ class Product {
     const productId = new ObjectId(this.id);
     await db.getDb().collection('products').deleteOne({ _id: productId });
 
-	await this.deleteCloudImage()
+    await this.deleteCloudImage();
     await this.deleteLocalImage();
   }
 
@@ -124,13 +132,13 @@ class Product {
     const imageFullPath = path.join(__dirname, '..', this.imagePath);
     try {
       await fs.unlink(imageFullPath);
-	  this.image = null;
-	  this.updateImagePath();
+      this.image = null;
+      this.updateImagePath();
     } catch {}
   }
 
   async deleteCloudImage() {
-	await cloudinary.deleteImage(this.publicId);
+    await cloudinary.deleteImage(this.publicId);
   }
 }
 

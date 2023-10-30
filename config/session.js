@@ -1,21 +1,11 @@
 const expressSession = require('express-session');
 const mongoDbStore = require('connect-mongodb-session');
 
-let mongodbUrl = 'mongodb://localhost:27017';
-if (process.env.MONGODB_URL) {
-	mongodbUrl = process.env.MONGODB_URL;
-}
-
-let sessionSecret = 'super-secret123';
-if (process.env.SESSION_SECRET) {
-	sessionSecret = process.env.SESSION_SECRET;
-}
-
 function createSessionStore() {
   const MongoDBStore = mongoDbStore(expressSession);
 
   const store = new MongoDBStore({
-    uri: mongodbUrl,
+    uri: MONGODB_URL,
     databaseName: 'online-shop',
     collection: 'sessions',
   });
@@ -25,7 +15,7 @@ function createSessionStore() {
 
 function createSessionConfig() {
   return {
-    secret: sessionSecret,
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: createSessionStore(),

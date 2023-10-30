@@ -2,8 +2,8 @@ const db = require('../data/database');
 const { ObjectId } = require('mongodb');
 
 class Order {
-  // Status => pending, fulfilled, cancelled
-  constructor(cart, userData, status = 'pending', date, orderId) {
+  // Status => unpaid, pending, fulfilled, cancelled
+  constructor(cart, userData, status = 'unpaid', date, orderId) {
     this.productData = cart;
     this.userData = userData;
     this.status = status;
@@ -83,6 +83,11 @@ class Order {
 
       return db.getDb().collection('orders').insertOne(orderDocument);
     }
+  }
+
+  async delete() {
+	const orderId = new ObjectId(this.id);
+	return db.getDb().collection('orders').deleteOne({_id: orderId});
   }
 }
 

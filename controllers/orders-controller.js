@@ -1,6 +1,4 @@
-const stripe = require('stripe')(
-  'sk_test_51LjNFREwabu2zB8bqo4Xu1hAdffCpmh9XD1kyEFWXL3XGfP1V8GVmU9XLTjNeFeB14S3W9rv0KvL0tBnP72D5nF9006WftYJyb'
-);
+const stripe = require('stripe')(STRIPE_API_KEY);
 
 const Order = require('../models/order-model');
 const User = require('../models/user-model');
@@ -19,10 +17,11 @@ async function getOrders(req, res) {
 async function addOrder(req, res, next) {
   const cart = res.locals.cart;
 
+  let orderId;
   try {
     const userDoc = await User.findById(res.locals.uid);
-    const order = new Order(cart, userDoc);
-    await order.save();
+    const newOrder = new Order(cart, userDoc);
+    orderId = (await newOrder.save()).insertedId;
   } catch (error) {
     return next(error);
   }
@@ -43,19 +42,31 @@ async function addOrder(req, res, next) {
       };
     }),
     mode: 'payment',
-    success_url: `http://localhost:3000/orders/success`,
-    cancel_url: `http://localhost:3000/orders/failure`,
+    success_url: `http://${HOSTNAME}/orders/success/${orderId}`,
+    cancel_url: `http://${HOSTNAME}/orders/failure/${orderId}`,
   });
 
   res.redirect(303, session.url);
 }
 
-function getSuccess(req, res) {
-  res.render('customer/orders/success');
+async function getSuccess(req, res) {
+  const order = await Order.findById(req.params.id);
+  if (order.status != 'unpaid') {
+    return res.render('shared/404');
+  };
+	res.render('customer/orders/success');
+	order.status = 'pending'
+	await order.save();
 }
 
-function getFailure(req, res) {
+async function getFailure(req, res) {
+  const order = await Order.findById(req.params.id);
+  if (order.status != 'unpaid') {
+    return res.render('shared/404');
+  };
   res.render('customer/orders/failure');
+  order.status = 'payment failed'
+	await order.save();
 }
 
 module.exports = {
