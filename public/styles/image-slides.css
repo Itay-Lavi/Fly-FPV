@@ -12,6 +12,17 @@
   margin: 0 5rem;
 }
 
+.slide-text h3 {
+  margin: 0;
+  color: var(--color-primary-200);
+}
+.slide-text h4 {
+  margin: 0;
+  color: var(--color-primary-400);
+  text-decoration: line-through;
+
+}
+
 .slide {
   display: none;
   flex-direction: row;

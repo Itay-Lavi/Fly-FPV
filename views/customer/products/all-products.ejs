@@ -13,7 +13,9 @@
 			<ul id="products-grid">
 			<% for (const product of products) { %>
 				<li>
-				<%- include('../../shared/includes/product-item', { product: product }) %>
+					<a href="/products/<%= product.id %>" >
+						<%- include('../../shared/includes/product-item', { product: product }) %>
+					</a>
 				</li>
 			<% } %>
 		</ul>

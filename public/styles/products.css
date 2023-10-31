@@ -26,6 +26,10 @@
 	font-size: 1.15rem;
 	margin: var(--space-2) 0;
   }
+  .product-item-content h3 {
+	margin: 0;
+	color: var(--color-primary-200);
+  }
   
   .product-item-actions {
 	display: flex;
