@@ -1,17 +1,41 @@
 <%- include('../../shared/includes/head', {pageTitle: 'All Products'}) %>
 <link rel="stylesheet" href="/styles/products.css">
-<meta name="description" content="WDE Online Shop">
+<link rel="stylesheet" href="/styles/image-slides.css">
+<script src="/scripts/image-slides.js" defer></script>
+<meta name="description" content="Drone Race Shop">
 </head>
 <body>
 <%- include('../../shared/includes/header') %>
-	<main>
+<main>
+	<section class="slideshow-container">
+		<a class="prev">&#10094;</a>
+		
+		<div class="slide fade">
+			<img src="https://res.cloudinary.com/dkvvhhtsq/image/upload/v1698679810/axwb2bm2cdunu79h2nqn.jpg" alt="Slide 1">
+			<div class="slide-text">
+				<h2>DJI FPV Drone</h3>
+			    <h3>$1299.99</h3>
+			</div>
+		</div>
+		<div class="slide fade">
+			<img src="https://res.cloudinary.com/dkvvhhtsq/image/upload/v1698679810/axwb2bm2cdunu79h2nqn.jpg" alt="Slide 1">
+			<div class="slide-text">
+				<h2>Black Panther</h3>
+			    <h3>499.99$</h3>
+			</div>
+		</div>
+
+		<a class="next">&#10095;</a> 
+	</section>
+		<section>
 			<h1>All Products</h1>
 			<ul id="products-grid">
-				<% for (const product of products) { %>
-				 <li>
-				   <%- include('../../shared/includes/product-item', { product: product }) %>
+			<% for (const product of products) { %>
+				<li>
+				<%- include('../../shared/includes/product-item', { product: product }) %>
 				</li>
-				<% } %>
-			</ul>
-	</main>
+			<% } %>
+		</ul>
+	</section>
+</main>
 <%- include('../../shared/includes/footer') %>

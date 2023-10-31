@@ -40,7 +40,7 @@ async function updateCartItem(event) {
 
   if (responseData.updatedCartData.updatedItemPrice <= 0) {
 	form.parentElement.parentElement.remove();
-	cartOrderButtonElement.remove();
+	if (cartOrderButtonElement) cartOrderButtonElement.remove();
   } else {
 	const cartItemTotalPriceElement = form.parentElement.querySelector('.cart-item-price');
 	cartItemTotalPriceElement.textContent = responseData.updatedCartData.updatedItemPrice.toFixed(2);
