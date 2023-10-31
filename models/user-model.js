@@ -42,6 +42,7 @@ class User {
       name: this.name,
       address: this.address,
     });
+    return result;
   }
 
   hasMatchingPassword(hashedPassword) {

@@ -64,22 +64,22 @@ async function signup(req, res) {
       );
       return;
     }
-    await user.signup();
+   const newUser = await user.signup();
+    authUtil.createUserSession(req, {_id: newUser.insertedId}, function () {
+      res.redirect('/');
+    });
   } catch (error) {
     return next(error);
   }
-
-  res.redirect('/login');
 }
 
-
 function getLogin(req, res, next) {
-	const sessionErrorData = sessionFlash.getSessionData(req, {
-		email: '',
-		password: '',
-	  });
+  const sessionErrorData = sessionFlash.getSessionData(req, {
+    email: '',
+    password: '',
+  });
 
-  res.render('customer/auth/login', {inputData: sessionErrorData});
+  res.render('customer/auth/login', { inputData: sessionErrorData });
 }
 
 async function login(req, res) {
@@ -87,7 +87,6 @@ async function login(req, res) {
     email: req.body.email,
     password: req.body.password,
   };
-
 
   const user = new User(formData.email, formData.password);
   let existingUser;
