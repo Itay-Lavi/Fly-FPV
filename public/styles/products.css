@@ -25,6 +25,7 @@
   .product-item-content h2 {
 	font-size: 1.15rem;
 	margin: var(--space-2) 0;
+	color: var(--color-gray-100);
   }
   .product-item-content h3 {
 	margin: 0;
