@@ -1,3 +1,8 @@
+#no-orders {
+	margin-top: 30vh;
+	text-align: center
+}
+
 .order-item {
 	background-color: var(--color-gray-400);
 	border-radius: var(--border-radius-small);

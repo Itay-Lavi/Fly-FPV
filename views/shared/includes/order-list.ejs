@@ -1,3 +1,4 @@
+<% if (orders.length > 0) {%>
 <ol>
 	<% for (const order of orders) { %>
 	  <li>
@@ -5,3 +6,6 @@
 	  </li>
 	<% } %>
   </ol>
+<% } else { %>
+  <h1 id="no-orders">No orders</h1>
+<% } %>

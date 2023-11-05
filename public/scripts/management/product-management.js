@@ -3,10 +3,11 @@ const deleteProductButtonElements = document.querySelectorAll('.product-item but
 
 async function deleteProduct(event) {
   const buttonElement = event.target;
-  const productId = buttonElement.dataset.productid;
-  const csrfToken = buttonElement.dataset.csrf;
+  const productItemActions = buttonElement.closest('.product-item-actions');
+  const productId = productItemActions.dataset.productid;
+  const csrfToken = productItemActions.dataset.csrf;
 
-  const productItem = event.target.closest('li');
+  const productItem = buttonElement.closest('li');
   try {
     productsListElement.removeChild(productItem);
     const response = await fetch(`/admin/products/${productId}?_csrf=${csrfToken}`, {
