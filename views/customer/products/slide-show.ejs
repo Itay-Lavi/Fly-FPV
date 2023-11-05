@@ -1,15 +1,17 @@
+<% if (slides.length > 0) { %>
 <section class="slideshow-container">
-    <a class="prev">&#10094;</a>
-    
-    <% slides.forEach(function(slide) { %>
-        <div class="slide fade">
-            <img src="<%= slide.imageUrl %>" alt="<%= slide.alt %>">
-            <div class="slide-text">
-                <h2><%= slide.title %></h2>
-                <h3>Just $<%= slide.price %></h3>
-                <h4>$<%= slide.higherPrice %></h4>
-            </div>
-        </div>
-    <% }); %>
-    <a class="next">&#10095;</a> 
+  <a class="prev">&#10094;</a>
+
+  <% slides.forEach(function(slide) { %>
+  <div class="slide fade">
+    <img src="<%= slide.imageUrl %>" alt="<%= slide.alt %>" />
+    <div class="slide-text">
+      <h2><%= slide.title %></h2>
+      <h3>Just $<%= slide.price %></h3>
+    </div>
+  </div>
+  <% }); %>
+
+  <a class="next">&#10095;</a>
 </section>
+<% } %>

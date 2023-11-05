@@ -1,3 +1,8 @@
+#management-btns {
+	display: flex;
+	justify-content: space-between;
+}
+
 #products-grid {
 	margin: var(--space-8) auto;
 	display: grid;

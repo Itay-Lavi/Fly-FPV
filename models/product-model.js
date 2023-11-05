@@ -15,6 +15,7 @@ class Product {
     this.image = productData.image;
     this.imageUrl = productData.imageUrl;
     this.publicId = productData.publicId;
+    this.slider = productData.slider;
     this.updateImagePath();
 
     if (productData._id) {
@@ -55,6 +56,13 @@ class Product {
     });
   }
 
+  static async findAllSlides() {
+    const products = await db.getDb().collection('products').find({slider: true}).toArray();
+    return products.map(function (productDoc) {
+      return new Product(productDoc);
+    });
+  }
+
   static async findMultiple(ids) {
     const productIds = ids.map(function (id) {
       return new ObjectId(id);
@@ -69,6 +77,12 @@ class Product {
     return products.map(function (productDocument) {
       return new Product(productDocument);
     });
+  }
+
+  async addOrRemoveSlide(addSlide) {
+    const productData = {slider: addSlide};
+    const productId = new ObjectId(this.id);
+    await db.getDb().collection('products').updateOne({ _id: productId }, { $set:  productData});
   }
 
   async save() {

@@ -8,15 +8,16 @@
 		<h1>Products Administration</h1>
 		<section>
 			<h2>Product Management</h2>
-			<p>
+			<div id="management-btns">
 				<a href="/admin/products/new" class="btn">Add Product</a>
-			</p>
+				<a href="/admin/products/slider" class="btn">Edit Slider</a>
+			</div>
 		</section>
 		<section>
 		<ul id="products-grid">
 			<% for (const product of products) { %>
 			 <li>
-               <%- include('../../shared/includes/product-item', { product: product }) %>
+               <%- include('../../shared/includes/product-item', { product: product, sliderView: false }) %>
 			</li>
 			<% } %>
 		</ul>

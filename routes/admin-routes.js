@@ -11,6 +11,12 @@ router.get('/products/new', adminController.getNewProduct);
 
 router.post('/products', imageUploadMiddleware, adminController.createNewProduct);
 
+router.get('/products/slider', adminController.getSliderProducts);
+
+router.post('/products/slider/:id', adminController.addProductToSlider);
+
+router.delete('/products/slider/:id', adminController.removeProductFromSlider);
+
 router.get('/products/:id', adminController.getUpdateProduct);
 
 router.post('/products/:id', imageUploadMiddleware, adminController.updateProduct);

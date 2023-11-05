@@ -1,0 +1,19 @@
+<%- include('../../shared/includes/head', {pageTitle: 'Edit Slider'}) %>
+<link rel="stylesheet" href="/styles/products.css">
+<script src="/scripts/management/slider-management.js" defer></script>
+</head>
+<body>
+<%- include('../../shared/includes/header') %>
+	<main>
+		<h1>Slider Products</h1>
+		<section>
+		<ul id="products-grid">
+			<% for (const product of products) { %>
+			 <li>
+               <%- include('../../shared/includes/product-item', { product: product, sliderView: true }) %>
+			</li>
+			<% } %>
+		</ul>
+		</section>
+	</main>
+<%- include('../../shared/includes/footer') %>

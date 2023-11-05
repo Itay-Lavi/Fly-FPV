@@ -1,5 +1,5 @@
 const Product = require('../models/product-model');
-const Order = require('../models/order-model')
+const Order = require('../models/order-model');
 const validation = require('../util/validation');
 const sessionFlash = require('../util/session-flash');
 
@@ -14,19 +14,19 @@ async function getProducts(req, res, next) {
 }
 
 function getNewProduct(req, res) {
-	const sessionErrorData = sessionFlash.getSessionData(req, {
-		title: '',
-		summary: '',
-		price: '',
-		description: '',
-	  });
+  const sessionErrorData = sessionFlash.getSessionData(req, {
+    title: '',
+    summary: '',
+    price: '',
+    description: '',
+  });
 
   res.render('admin/products/new-product', { product: sessionErrorData });
 }
 
 async function createNewProduct(req, res, next) {
-	const formData = { ...req.body, image: req.file.filename };
-	const product = new Product(formData);
+  const formData = { ...req.body, image: req.file.filename };
+  const product = new Product(formData);
 
   if (!req.file || !validation.productDetailsIsValid(req.body)) {
     sessionFlash.flashDataToSession(
@@ -36,16 +36,15 @@ async function createNewProduct(req, res, next) {
         ...req.body,
       },
       async function () {
-		try {
-			await product.deleteImage();
-		} catch {}
+        try {
+          await product.deleteImage();
+        } catch {}
         res.redirect('/admin/products/new');
       }
     );
 
     return;
   }
-
 
   try {
     await product.save();
@@ -65,7 +64,7 @@ async function getUpdateProduct(req, res, next) {
     next(error);
   }
 
-   const sessionErrorData = sessionFlash.getSessionData(req, product);
+  const sessionErrorData = sessionFlash.getSessionData(req, product);
 
   res.render('admin/products/update-product', { product: sessionErrorData });
 }
@@ -81,22 +80,21 @@ async function updateProduct(req, res, next) {
         message: 'Invalid - please check your data.',
         ...product,
       },
-	  async function () {
-		try {
-			await product.deleteImage();
-		} catch {}
+      async function () {
+        try {
+          await product.deleteImage();
+        } catch {}
         res.redirect('/admin/products/' + product.id);
       }
     );
     return;
   }
 
-
   if (req.file) {
     try {
       const oldProduct = await Product.findById(req.params.id);
       oldProduct.deleteLocalImage();
-	  oldProduct.deleteCloudImage();
+      oldProduct.deleteCloudImage();
     } catch (error) {
       next(error);
       return;
@@ -115,53 +113,83 @@ async function updateProduct(req, res, next) {
   res.redirect('/admin/products');
 }
 
+async function getSliderProducts(req, res, next) {
+  const products = await Product.findAll();
+  products.sort((a, b) => (a.slider === b.slider) ? 0 : a.slider ? -1 : 1);
+
+  res.render('admin/products/slider', { products });
+}
+
+async function addProductToSlider(req, res, next) {
+  try {
+    const product = await Product.findById(req.params.id);
+    product.addOrRemoveSlide(true);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error!' });
+  }
+
+  res.json({ message: 'Product added to slider!' });
+}
+
+async function removeProductFromSlider(req, res, next) {
+  try {
+    const product = await Product.findById(req.params.id);
+    product.addOrRemoveSlide(false);
+  } catch (error) {
+    return res.status(500).json({ message: 'Error!' });
+  }
+  res.json({ message: 'Product removed from slider!' });
+}
+
 async function deleteProduct(req, res, next) {
   try {
     const product = await Product.findById(req.params.id);
     await product.delete();
   } catch (error) {
-    res.status(500).json({ message: 'Error!' });
-    return;
+    return res.status(500).json({ message: 'Error!' });
   }
 
   res.json({ message: 'Product deleted!' });
 }
 
 async function getOrders(req, res, next) {
-	try {
-	  const orders = await Order.findAll();
-	  res.render('admin/orders/admin-orders', {
-		orders: orders
-	  });
-	} catch (error) {
-	  next(error);
-	}
+  try {
+    const orders = await Order.findAll();
+    res.render('admin/orders/admin-orders', {
+      orders: orders,
+    });
+  } catch (error) {
+    next(error);
   }
-  
-  async function updateOrder(req, res, next) {
-	const orderId = req.params.id;
-	const newStatus = req.body.newStatus;
-  
-	try {
-	  const order = await Order.findById(orderId);
-  
-	  order.status = newStatus;
-  
-	  await order.save();
-  
-	  res.json({ message: 'Order updated', newStatus: newStatus });
-	} catch (error) {
-	  next(error);
-	}
+}
+
+async function updateOrder(req, res, next) {
+  const orderId = req.params.id;
+  const newStatus = req.body.newStatus;
+
+  try {
+    const order = await Order.findById(orderId);
+
+    order.status = newStatus;
+
+    await order.save();
+
+    res.json({ message: 'Order updated', newStatus: newStatus });
+  } catch (error) {
+    next(error);
   }
+}
 
 module.exports = {
-  getProducts: getProducts,
-  getNewProduct: getNewProduct,
-  createNewProduct: createNewProduct,
-  getUpdateProduct: getUpdateProduct,
-  updateProduct: updateProduct,
-  deleteProduct: deleteProduct,
-  getOrders: getOrders,
-  updateOrder: updateOrder
+  getProducts,
+  getNewProduct,
+  createNewProduct,
+  getUpdateProduct,
+  updateProduct,
+  getSliderProducts,
+  addProductToSlider,
+  removeProductFromSlider,
+  deleteProduct,
+  getOrders,
+  updateOrder
 };
