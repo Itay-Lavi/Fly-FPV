@@ -2,8 +2,16 @@ const db = require('../data/database');
 const { ObjectId } = require('mongodb');
 
 class Order {
+ static statusOptions = {
+   unpaid: 'unpaid',
+   pending: 'pending',
+   paymentFailed: 'payment failed',
+   fulfilled: 'fulfilled',
+   cancelled: 'cancelled',
+ }
+
   // Status => unpaid, pending, fulfilled, cancelled
-  constructor(cart, userData, status = 'unpaid', date, orderId) {
+  constructor(cart, userData, status = statusOptions.unpaid, date, orderId) {
     this.productData = cart;
     this.userData = userData;
     this.status = status;
@@ -18,6 +26,11 @@ class Order {
     }
     this.id = orderId;
   }
+
+  static isStatusValid(inputStatus) {
+    return Object.values(statusOptions).includes(inputStatus);
+  }
+
 
   static transformOrderDocument(orderDoc) {
     return new Order(

@@ -51,21 +51,21 @@ async function addOrder(req, res, next) {
 
 async function getSuccess(req, res) {
   const order = await Order.findById(req.params.id);
-  if (order.status != 'unpaid') {
+  if (order.status != Order.statusOptions.unpaid) {
     return res.render('shared/404');
   };
 	res.render('customer/orders/success');
-	order.status = 'pending'
+	order.status = Order.statusOptions.pending;
 	await order.save();
 }
 
 async function getFailure(req, res) {
   const order = await Order.findById(req.params.id);
-  if (order.status != 'unpaid') {
+  if (order.status != Order.statusOptions.unpaid) {
     return res.render('shared/404');
   };
   res.render('customer/orders/failure');
-  order.status = 'payment failed'
+  order.status = Order.statusOptions.paymentFailed;
 	await order.save();
 }
 
