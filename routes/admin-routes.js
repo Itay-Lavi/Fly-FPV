@@ -1,30 +1,32 @@
 const express = require('express');
 
-const adminController = require('../controllers/admin-controller');
+const adminOrderController = require('../controllers/admin/order');
+const adminProdSliderController = require('../controllers/admin/product-slider');
+const adminProductController = require('../controllers/admin/product');
 const imageUploadMiddleware = require('../middlewares/image-upload-middleware');
 
 const router = express.Router();
 
-router.get('/products', adminController.getProducts); // /admin/products
+router.get('/products', adminProductController.getProducts); // /admin/products
 
-router.get('/products/new', adminController.getNewProduct);
+router.get('/products/new', adminProductController.getNewProduct);
 
-router.post('/products', imageUploadMiddleware, adminController.createNewProduct);
+router.post('/products', imageUploadMiddleware, adminProductController.createNewProduct);
 
-router.get('/products/slider', adminController.getSliderProducts);
+router.get('/products/slider', adminProdSliderController.getSliderProducts);
 
-router.post('/products/slider/:id', adminController.addProductToSlider);
+router.post('/products/slider/:id', adminProdSliderController.addProductToSlider);
 
-router.delete('/products/slider/:id', adminController.removeProductFromSlider);
+router.delete('/products/slider/:id', adminProdSliderController.removeProductFromSlider);
 
-router.get('/products/:id', adminController.getUpdateProduct);
+router.get('/products/:id', adminProductController.getUpdateProduct);
 
-router.post('/products/:id', imageUploadMiddleware, adminController.updateProduct);
+router.post('/products/:id', imageUploadMiddleware, adminProductController.updateProduct);
 
-router.delete('/products/:id', adminController.deleteProduct);
+router.delete('/products/:id', adminProductController.deleteProduct);
 
-router.get('/orders', adminController.getOrders);
+router.get('/orders', adminOrderController.getOrders);
 
-router.patch('/orders/:id', adminController.updateOrder);
+router.patch('/orders/:id', adminOrderController.updateOrder);
 
 module.exports = router;

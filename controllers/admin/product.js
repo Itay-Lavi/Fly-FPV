@@ -1,7 +1,6 @@
-const Product = require('../models/product-model');
-const Order = require('../models/order-model');
-const validation = require('../util/validation');
-const sessionFlash = require('../util/session-flash');
+const Product = require('../../models/product-model');
+const validation = require('../../util/validation');
+const sessionFlash = require('../../util/session-flash');
 
 async function getProducts(req, res, next) {
   try {
@@ -113,34 +112,6 @@ async function updateProduct(req, res, next) {
   res.redirect('/admin/products');
 }
 
-async function getSliderProducts(req, res, next) {
-  const products = await Product.findAll();
-  products.sort((a, b) => (a.slider === b.slider) ? 0 : a.slider ? -1 : 1);
-
-  res.render('admin/products/slider', { products });
-}
-
-async function addProductToSlider(req, res, next) {
-  try {
-    const product = await Product.findById(req.params.id);
-    product.addOrRemoveSlide(true);
-  } catch (error) {
-    return res.status(500).json({ message: 'Error!' });
-  }
-
-  res.json({ message: 'Product added to slider!' });
-}
-
-async function removeProductFromSlider(req, res, next) {
-  try {
-    const product = await Product.findById(req.params.id);
-    product.addOrRemoveSlide(false);
-  } catch (error) {
-    return res.status(500).json({ message: 'Error!' });
-  }
-  res.json({ message: 'Product removed from slider!' });
-}
-
 async function deleteProduct(req, res, next) {
   try {
     const product = await Product.findById(req.params.id);
@@ -152,44 +123,11 @@ async function deleteProduct(req, res, next) {
   res.json({ message: 'Product deleted!' });
 }
 
-async function getOrders(req, res, next) {
-  try {
-    const orders = await Order.findAll();
-    res.render('admin/orders/admin-orders', {
-      orders: orders,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function updateOrder(req, res, next) {
-  const orderId = req.params.id;
-  const newStatus = req.body.newStatus;
-
-  try {
-    const order = await Order.findById(orderId);
-
-    order.status = newStatus;
-
-    await order.save();
-
-    res.json({ message: 'Order updated', newStatus: newStatus });
-  } catch (error) {
-    next(error);
-  }
-}
-
 module.exports = {
   getProducts,
   getNewProduct,
   createNewProduct,
   getUpdateProduct,
   updateProduct,
-  getSliderProducts,
-  addProductToSlider,
-  removeProductFromSlider,
-  deleteProduct,
-  getOrders,
-  updateOrder
+  deleteProduct
 };
