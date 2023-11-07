@@ -1,6 +1,15 @@
 <header id="main-header">
-<a id="logo" href="/"><img  src="/images/drone-race-logo.jpg" alt="">Fpv Fly</a>
-  <nav><%- include('nav-items') %></nav>
+  <a id="logo" href="/"
+    ><img src="/images/fpvfly-logo.png" alt="FPV Fly Logo"
+  /></a>
+  <div id="header-nav-column">
+    <nav class="nav-items"><%- include('nav-items') %></nav>
+    <nav class="categories-items">
+      <ul>
+      <%- include('categories-items') %>
+    </ul>
+    </nav>
+  </div>
   <button id="mobile-menu-btn">
     <span></span>
     <span></span>
@@ -8,5 +17,5 @@
   </button>
 </header>
 <aside id="mobile-menu">
-  <nav><%- include('nav-items') %></nav>
+  <nav class="nav-items"><%- include('nav-items') %></nav>
 </aside>

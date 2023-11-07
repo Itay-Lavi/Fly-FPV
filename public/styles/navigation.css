@@ -7,13 +7,12 @@ main {
   top: 0;
   left: 0;
   width: 100%;
-  max-width: 60rem;
-  height: 5rem;
+  height: 4rem;
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: var(--space-2) var(--space-6) 0 var(--space-6);
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
   border-bottom: 1px solid var(--color-primary-500);
   background-color: var(--color-gray-500);
 }
@@ -22,28 +21,49 @@ main {
   display: none;
 }
 
-#logo {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  font-size: var(--space-6);
-}
-
 #logo img {
-  width: 70px;
-  border-radius: 50%;
+  height: 3rem;
 }
 
-.nav-items {
+#header-nav-column {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#auth-items {
+  display: flex;
+}
+
+.divider {
+  border-left: 1px solid rgb(160, 160, 160);
+}
+
+.nav-items ul {
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .nav-items li {
-  margin: 0 var(--space-2);
+  margin: var(--space-8) var(--space-2);
+}
+
+.categories-items ul {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 var(--space-4) var(--space-2) var(--space-4);
+}
+
+.nav-items a,
+.categories-items a {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--border-radius-small);
 }
 
 .nav-items button {
@@ -65,6 +85,7 @@ main {
   height: 2.25rem;
   background-color: transparent;
   padding: 0;
+  margin-top: 0.25rem;
 }
 
 #mobile-menu-btn span {
@@ -75,9 +96,9 @@ main {
 
 #mobile-menu {
   position: fixed;
-  top: 5rem;
+  top: 4rem;
   left: 0;
-  height: calc(100vh - 5rem);
+  height: calc(100vh - 4rem);
   width: 100%;
   background-color: var(--color-gray-700);
   display: none;
@@ -90,9 +111,9 @@ main {
 }
 
 #mobile-menu nav {
-  height: 20rem;
+  height: 90%;
   width: 90%;
-  margin: var(--space-4) auto;
+  margin: var(--space-6) auto;
 }
 
 #mobile-menu .nav-items a,
@@ -108,15 +129,53 @@ main {
 
   #main-header {
     position: static;
+    height: 7.5rem;
+    padding-top: 0.5rem;
   }
 
-  #main-header nav {
+  #main-header div nav {
     display: block;
+  }
+
+  #logo img {
+    height: 7rem;
+  }
+
+  #auth-items li {
+    margin: 0;
+  }
+
+  .categories-items ul {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .nav-items ul {
+    flex-direction: row;
+    justify-content: end;
+    margin-top: 0.5rem;
+  }
+
+  .nav-items li {
+    margin: 0 var(--space-2);
   }
 
   .nav-items button {
     color: var(--color-primary-500);
     border-color: var(--color-primary-500);
+  }
+
+  .nav-items a,
+  .categories-items a {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--border-radius-small);
+  }
+
+  .nav-items a:hover,
+  .categories-items a:hover,
+  .nav-items a:active,
+  .categories-items a:active {
+    background-color: var(--color-primary-500-bg);
   }
 
   #mobile-menu-btn {
@@ -131,17 +190,7 @@ main {
     display: none;
   }
 
-  .nav-items {
-    flex-direction: row;
-  }
-
-  .nav-items a {
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--border-radius-small);
-  }
-
-  .nav-items a:hover,
-  .nav-items a:active {
-    background-color: var(--color-primary-500-bg);
+  #categories-mobile {
+    display: none;
   }
 }

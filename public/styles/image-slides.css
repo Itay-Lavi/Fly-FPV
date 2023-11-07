@@ -17,11 +17,6 @@
   margin: 0;
   color: var(--color-primary-200);
 }
-/* .slide-text h4 {
-  margin: 0;
-  color: var(--color-primary-400);
-  text-decoration: line-through;
-} */
 
 .slide {
   display: none;
@@ -68,8 +63,7 @@
   }
 }
 
-/* mediaquery */
-@media screen and (max-width: 700px) {
+@media (max-width: 45rem) {
   .slideshow-container {
     display: none;
   }

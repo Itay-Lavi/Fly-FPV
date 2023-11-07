@@ -1,7 +1,9 @@
-<ul class="nav-items">
+<ul>
 	<% if (!locals.isAdmin) { %>
-	<li><a href="/">Shop</a></li>
-	<li><a href="/cart">Cart <span class="badge"><% if (locals.cart) { %> <%= locals.cart.totalQuantity %> <% } else { %> 0 <% } %></span></a></li>
+	<div>
+		<li><a href="/cart">Cart <span class="badge"><% if (locals.cart) { %> <%= locals.cart.totalQuantity %> <% } else { %> 0 <% } %></span></a></li>
+		<div id="categories-mobile"><%- include('categories-items') %></div>
+	</div>
 	<% } %>
 
 	<% if (locals.isAuth && !locals.isAdmin) { %>
@@ -14,10 +16,12 @@
 	<% } %>
 
 	<% if (!locals.isAuth) { %>
-	  <li><a href="/signup">Signup</a></li>
-	  <li><a href="/login">Login</a></li>
+		<div id="auth-items">
+			<li><a href="/signup">Signup</a></li>
+			<div class="divider"></div>
+			<li><a href="/login">Login</a></li>
+		</div>
 	  <% } %>
-
 	<% if (locals.isAuth) { %>
 	<li>
 	  <form action="/logout" method="POST">

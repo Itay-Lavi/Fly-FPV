@@ -41,6 +41,8 @@
 .product-item-content h3 {
   margin: 0;
   color: var(--color-primary-200);
+  font-size: 1rem;
+  font-weight: 400;
 }
 
 .product-item-actions {

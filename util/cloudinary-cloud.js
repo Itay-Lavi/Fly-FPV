@@ -12,7 +12,7 @@ cloudinary.config(config);
 async function uploadImage(filePath) {
   let result;
   try {
-    result = await cloudinary.uploader.upload(filePath);
+    result = await cloudinary.uploader.upload(filePath, {transformation: [{quality: 'auto'}]});
   } catch (error) {
     throw error;
   }
