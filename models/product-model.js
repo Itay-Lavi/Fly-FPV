@@ -83,6 +83,15 @@ class Product {
       });
   }
 
+  static async findBySearch(search) {
+    const regex = new RegExp(search, 'i');
+    return await db
+      .getDb()
+      .collection('products')
+      .find({ $or: [{ title: regex }, { summary: regex }, { category: regex }] })
+      .toArray();
+  }
+
   static async findAllSlides() {
     const products = await db
       .getDb()

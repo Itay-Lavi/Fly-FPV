@@ -1,6 +1,20 @@
 const Product = require('../models/product-model');
 const { capitalizeFirstLetter } = require('../util/helpers');
 
+async function getProductsBySearch(req, res, next) {
+  const {query} = req.query;
+
+  try {
+    const products = await Product.findBySearch(query);
+    if (products.length === 0) {
+      return res.render('shared/no-products');
+    }
+    res.render('customer/products/searched-products', { products, category: query });
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getProductsByCategory(req, res, next) {
   let category = req.params.category;
 
@@ -39,6 +53,7 @@ async function getProductDetails(req, res, next) {
 }
 
 module.exports = {
+  getProductsBySearch,
   getProductsByCategory,
   getProductDetails,
 };

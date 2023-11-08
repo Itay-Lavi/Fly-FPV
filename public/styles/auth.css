@@ -3,7 +3,7 @@ h1 {
   color: var(--color-gray-200);
 }
 
-form {
+.auth-form {
   max-width: 25rem;
   margin: var(--space-8) auto;
   padding: var(--space-4);
@@ -12,11 +12,11 @@ form {
   text-align: center;
 }
 
-form a {
+.auth-form a {
   color: var(--color-primary-200);
 }
 
-form a:hover,
-form a:active {
+.auth-form a:hover,
+.auth-form a:active {
   color: var(--color-primary-400);
 }

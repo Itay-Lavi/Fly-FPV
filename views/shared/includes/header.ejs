@@ -3,11 +3,21 @@
     ><img src="/images/fpvfly-logo.png" alt="FPV Fly Logo"
   /></a>
   <div id="header-nav-column">
-    <nav class="nav-items"><%- include('nav-items') %></nav>
+    <div>
+      <nav class="nav-items"><%- include('nav-items') %></nav>
+      <form id="search-form" method="GET" action="/products/search">
+        <label for="search-input"></label>
+        <input id="search-input" name="query" type="text" placeholder="Search"  />
+        <button  type="submit">
+          <i class="fa-solid fa-magnifying-glass fa-lg icon-btn"></i>
+        </button>
+      </form>
+    </div>
+
     <nav class="categories-items">
       <ul>
-      <%- include('categories-items') %>
-    </ul>
+        <%- include('categories-items') %>
+      </ul>
     </nav>
   </div>
   <button id="mobile-menu-btn">

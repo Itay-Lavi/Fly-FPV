@@ -38,11 +38,11 @@ app.use(express.json());
 const sessionConfig = createSessionConfig();
 
 app.use(expressSession(sessionConfig));
+app.use(addProdctCategoriesMiddleware);
 app.use(csrf());
 
 app.use(cartMiddleware);
 app.use(updateCartPricesMiddleware);
-app.use(addProdctCategoriesMiddleware);
 
 app.use(addCsrfTokenMiddleware);
 app.use(checkAuthStatusMiddleware);
