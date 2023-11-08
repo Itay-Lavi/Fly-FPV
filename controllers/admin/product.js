@@ -70,7 +70,8 @@ async function getUpdateProduct(req, res, next) {
 
 async function updateProduct(req, res, next) {
   const formData = { ...req.body, _id: req.params.id };
-  const product = new Product(formData);
+  const oldProduct = await Product.findById(req.params.id);
+  const product = new Product({...formData, slider: oldProduct.slider});
 
   if (!validation.productDetailsIsValid(formData)) {
     sessionFlash.flashDataToSession(
@@ -91,7 +92,6 @@ async function updateProduct(req, res, next) {
 
   if (req.file) {
     try {
-      const oldProduct = await Product.findById(req.params.id);
       oldProduct.deleteLocalImage();
       oldProduct.deleteCloudImage();
     } catch (error) {
