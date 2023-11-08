@@ -9,11 +9,11 @@
 <main>
 <%- include('./slide-show') %>
 		<section>
-			<h1>All Products</h1>
+			<h1><%= category %> Products</h1>
 			<ul id="products-grid">
 			<% for (const product of products) { %>
 				<li>
-					<a href="/products/<%= product.id %>" >
+					<a href="/product-details/<%= product.id %>" >
 						<%- include('../../shared/includes/product-item', { product: product, sliderView: false }) %>
 					</a>
 				</li>

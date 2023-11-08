@@ -12,6 +12,6 @@
 				<p><%= product.message %></p>
 			</section>
 			<% }%>
-<%- include('includes/product-form', { submitPath: '/admin/products/', product: product, imageRequired: true}) %>
+<%- include('includes/product-form', { submitPath: '/admin/products/', product: product, categories: categories, imageRequired: true}) %>
 	</main>
 <%- include('../../shared/includes/footer') %>

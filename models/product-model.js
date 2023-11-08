@@ -7,9 +7,19 @@ const { ObjectId } = require('mongodb');
 const db = require('../data/database');
 
 class Product {
+  static productCategories = [
+    'All',
+    'Drones',
+    'Goggles',
+    'RC Radio',
+    'Battery',
+    'Accessories',
+  ];
+
   constructor(productData) {
     this.title = productData.title;
     this.summary = productData.summary;
+    this.category = productData.category ?? 'All';
     this.price = +productData.price;
     this.description = productData.description;
     this.image = productData.image;
@@ -25,6 +35,12 @@ class Product {
 
   updateImagePath() {
     this.imagePath = `product-data/images/${this.image}`;
+  }
+
+  static isCategoryValid(category) {
+    return this.productCategories.some(
+      (item) => item.toLowerCase() === category.toLowerCase()
+    );
   }
 
   static async findById(productId) {
@@ -56,8 +72,23 @@ class Product {
     });
   }
 
+  static async findByCategory(category) {
+    const products = await db
+      .getDb()
+      .collection('products')
+      .find({ category: { $regex: new RegExp(category, 'i') } })
+      .toArray();
+      return products.map(function (productDoc) {
+        return new Product(productDoc);
+      });
+  }
+
   static async findAllSlides() {
-    const products = await db.getDb().collection('products').find({slider: true}).toArray();
+    const products = await db
+      .getDb()
+      .collection('products')
+      .find({ slider: true })
+      .toArray();
     return products.map(function (productDoc) {
       return new Product(productDoc);
     });
@@ -80,24 +111,29 @@ class Product {
   }
 
   async addOrRemoveSlide(addSlide) {
-    const productData = {slider: addSlide};
+    const productData = { slider: addSlide };
     const productId = new ObjectId(this.id);
-    await db.getDb().collection('products').updateOne({ _id: productId }, { $set:  productData});
+    await db
+      .getDb()
+      .collection('products')
+      .updateOne({ _id: productId }, { $set: productData });
   }
 
   async save() {
     const productData = {
       title: this.title,
+      category: this.category,
       summary: this.summary,
       price: this.price,
       description: this.description,
+      slider: this.slider,
     };
-  
+
     try {
       if (this.id) {
         // Updating existing product
         const productId = new ObjectId(this.id);
-  
+
         if (this.image) {
           const result = await cloudinary.uploadImage(this.imagePath);
           productData.imageUrl = result.secure_url;
@@ -108,8 +144,11 @@ class Product {
           delete productData.imageUrl;
           delete productData.publicId;
         }
-  
-        await db.getDb().collection('products').updateOne({ _id: productId }, { $set: productData });
+
+        await db
+          .getDb()
+          .collection('products')
+          .updateOne({ _id: productId }, { $set: productData });
       } else {
         // Creating a new product
         if (this.image) {
@@ -118,7 +157,7 @@ class Product {
           productData.publicId = result.public_id;
           this.deleteLocalImage();
         }
-  
+
         await db.getDb().collection('products').insertOne(productData);
       }
     } catch (error) {
@@ -127,7 +166,6 @@ class Product {
       throw error;
     }
   }
-
 
   async replaceImage(newImage) {
     this.image = newImage;

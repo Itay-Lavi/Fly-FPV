@@ -10,9 +10,6 @@ const btnStatus = {
 const productButtons = document.querySelectorAll('.product-item button');
 
 async function addOrRemoveFromSlider({ productId, csrfToken, method }) {
-console.log(productId);
-  console.log(csrfToken);
-
   const response = await fetch(
     `/admin/products/slider/${productId}?_csrf=${csrfToken}`,
     {

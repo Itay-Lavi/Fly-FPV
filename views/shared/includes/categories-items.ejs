@@ -1,6 +1,5 @@
-  <li><a href="/products/drones">Drones</a></li>
-  <li><a href="/products/goggles">Goggles</a></li>
-  <li><a href="/products/radio">RC Radio</a></li>
-  <li><a href="/products/battery">Battery</a></li>
-  <li><a href="/products/accessories">Accessories</a></li>
-
+<% for (const category of locals.productCategories) { %>
+  <% if (category.toLowerCase() !== 'all') { %>
+    <li><a href="/products/<%= category.toLowerCase() %>"><%= category %></a></li>
+  <% } %>
+<% } %>

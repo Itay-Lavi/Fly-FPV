@@ -20,7 +20,7 @@ function getNewProduct(req, res) {
     description: '',
   });
 
-  res.render('admin/products/new-product', { product: sessionErrorData });
+  res.render('admin/products/new-product', { product: sessionErrorData, categories: Product.productCategories });
 }
 
 async function createNewProduct(req, res, next) {
@@ -65,7 +65,7 @@ async function getUpdateProduct(req, res, next) {
 
   const sessionErrorData = sessionFlash.getSessionData(req, product);
 
-  res.render('admin/products/update-product', { product: sessionErrorData });
+  res.render('admin/products/update-product', { product: sessionErrorData, categories: Product.productCategories });
 }
 
 async function updateProduct(req, res, next) {
