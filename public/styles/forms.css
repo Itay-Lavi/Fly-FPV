@@ -45,3 +45,16 @@ textarea {
   object-fit: cover;
   border-radius: var(--border-radius-small);
 }
+
+select {
+  font: inherit;
+  padding: var(--space-2);
+  border-radius: var(--border-radius-small);
+  border: none;
+  width: 30%;
+  min-width: 10rem;
+}
+
+input::selection,textarea::selection {
+  background-color: var(--color-primary-200);
+}

@@ -39,6 +39,10 @@ html {
   --shadow-medium: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+::selection {
+  background-color: var(--color-primary-200-contrast);
+}
+
 body {
   background-color: var(--color-gray-500);
   color: var(--color-gray-100);
