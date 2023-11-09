@@ -9,8 +9,8 @@ label {
   margin-bottom: var(--space-2);
 }
 
-.auth-form input,
-.auth-form textarea {
+.main-form input,
+.main-form textarea {
   font: inherit;
   padding: var(--space-2);
   border-radius: var(--border-radius-small);

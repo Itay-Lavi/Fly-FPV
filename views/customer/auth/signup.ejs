@@ -12,7 +12,7 @@
 				<p><%= inputData.message %></p>
 			</section>
 			<% }%>
-		<form class="auth-form" action="/signup" method="POST">
+		<form class="main-form auth-form" action="/signup" method="POST">
 			<input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
 			<p>
 				<label for="email">E-mail</label>

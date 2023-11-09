@@ -4,10 +4,10 @@
   /></a>
   <div id="header-nav-column">
     <div>
-      <nav class="nav-items"><%- include('nav-items') %></nav>
+      <nav class="nav-items <%= locals.isAuth ? '' : 'small-vert-margin' %>"><%- include('nav-items') %></nav>
       <form id="search-form" method="GET" action="/products/search">
         <label for="search-input"></label>
-        <input id="search-input" name="query" type="text" placeholder="Search"  />
+        <input id="search-input" name="query" type="text" placeholder="Search" required/>
         <button  type="submit">
           <i class="fa-solid fa-magnifying-glass fa-lg icon-btn"></i>
         </button>
@@ -26,6 +26,6 @@
     <span></span>
   </button>
 </header>
-<aside id="mobile-menu">
+<aside id="mobile-menu">j
   <nav class="nav-items"><%- include('nav-items') %></nav>
 </aside>
