@@ -1,8 +1,9 @@
 #mobile-menu {
+  z-index: 1;
   position: fixed;
   top: 4rem;
   left: 0;
-  height: calc(100vh - 4rem);
+  height: calc(100% - 4rem);
   width: 100%;
   background-color: var(--color-gray-700);
   display: none;
