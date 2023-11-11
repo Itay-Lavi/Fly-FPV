@@ -5,20 +5,21 @@
     <div class="product-item-actions" data-productId="<%= product.id %>" data-csrf="<%= locals.csrfToken %>">
 
       <% if (locals.isAdmin) { %>
-        <% if (!sliderView) { %>
+        <% if (!editMode) { %>
           <a class="btn btn-alt" href="/admin/products/<%= product.id %>"
             >View & Edit</a>
-          <button
-            class="btn btn-alt"
-          >
+          <button class="btn btn-alt delete-btn">
             Delete
           </button>
-        <% } else if (sliderView && !product.slider) { %>
+          <a href="/admin/products/<%= product.id %>/complementary" class="btn btn-alt edit-complementary-btn">
+            Complementary Products
+          </a>
+        <% } else if (editMode && !product.status) { %>
           <button
           class="btn btn-alt">
           Add
         </button>
-        <% } else if (sliderView && product.slider) { %>
+        <% } else if (editMode && product.status) { %>
           <button
           class="btn btn-alt">
           Remove

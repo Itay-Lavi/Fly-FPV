@@ -1,7 +1,7 @@
 const express = require('express');
 
 const adminOrderController = require('../controllers/admin/order');
-const adminProdSliderController = require('../controllers/admin/product-slider');
+const adminProdPickerController = require('../controllers/admin/product-picker');
 const adminProductController = require('../controllers/admin/product');
 const imageUploadMiddleware = require('../middlewares/image-upload-middleware');
 
@@ -13,11 +13,17 @@ router.get('/products/new', adminProductController.getNewProduct);
 
 router.post('/products', imageUploadMiddleware, adminProductController.createNewProduct);
 
-router.get('/products/slider', adminProdSliderController.getSliderProducts);
+router.get('/products/slider', adminProdPickerController.getSliderProducts);
 
-router.post('/products/slider/:id', adminProdSliderController.addProductToSlider);
+router.route('/products/:id/slider')
+.post(adminProdPickerController.handleSlider)
+.delete(adminProdPickerController.handleSlider);
 
-router.delete('/products/slider/:id', adminProdSliderController.removeProductFromSlider);
+router.get('/products/:id/complementary', adminProdPickerController.getComplementaries);
+
+router.route('/products/:id/complementary')
+.post(adminProdPickerController.handleComplementary)
+.delete(adminProdPickerController.handleComplementary);
 
 router.get('/products/:id', adminProductController.getUpdateProduct);
 

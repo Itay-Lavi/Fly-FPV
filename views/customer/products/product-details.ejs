@@ -5,15 +5,31 @@
 <body>
 <%- include('../../shared/includes/header') %>
 	<main id="product-details">
-     <header>
+     <section>
        <img src="<%= product.imageUrl %>" alt="<%= product.title %>">
 	   <div id="product-info">
 		 <h1><%= product.title %></h1>
+		 <h4><%= product.summary %></h4>
 		 <p>$<%= product.price %></p>
           <button class="btn" data-productid="<%= product.id %>" data-csrf="<%= locals.csrfToken %>">Add to Cart</button>
 	   </div>
-     </header>
+     </section>
 
 	 <p id="product-description"><%= product.description %></p>
+
+	 <% if (complementariesProducts && complementariesProducts.length > 0) { %>
+	  <div>
+	    <h2>Complementary Products</h2>
+	     <ul id="complementary-products">
+		  <% for (const complementaryProduct of complementariesProducts) { %>
+           <li>
+				<a href="/product-details/<%= complementaryProduct.id %>" >
+			 <%- include('../../shared/includes/product-item', {product: complementaryProduct, editMode: false}) %>
+				</a>
+		   </li>
+		  <% } %>
+	     </ul>
+	 </div>
+	 <% } %>
 	</main>
 <%- include('../../shared/includes/footer') %>

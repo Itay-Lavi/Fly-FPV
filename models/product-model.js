@@ -26,6 +26,7 @@ class Product {
     this.imageUrl = productData.imageUrl;
     this.publicId = productData.publicId;
     this.slider = productData.slider;
+    this.complementaries = productData.complementaries;
     this.updateImagePath();
 
     if (productData._id) {
@@ -119,13 +120,25 @@ class Product {
     });
   }
 
-  async addOrRemoveSlide(addSlide) {
-    const productData = { slider: addSlide };
+  async handleSlider(slider) {
+    const productData = { slider };
     const productId = new ObjectId(this.id);
     await db
       .getDb()
       .collection('products')
       .updateOne({ _id: productId }, { $set: productData });
+  }
+
+  async handleComplementary(complementaryProdId, actionType = true) {
+    const update = {};
+    update[actionType ? '$push' : '$pull'] = {
+        'complementaries': new ObjectId(complementaryProdId),
+    };
+    const productId = new ObjectId(this.id);
+    await db
+      .getDb()
+      .collection('products')
+      .updateOne({ _id: productId }, update);
   }
 
   async save() {

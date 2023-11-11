@@ -2,14 +2,17 @@ const Product = require('../models/product-model');
 const { capitalizeFirstLetter } = require('../util/helpers');
 
 async function getProductsBySearch(req, res, next) {
-  const {query} = req.query;
+  const { query } = req.query;
 
   try {
     const products = await Product.findBySearch(query);
     if (products.length === 0) {
       return res.render('shared/no-products');
     }
-    res.render('customer/products/searched-products', { products, category: query });
+    res.render('customer/products/searched-products', {
+      products,
+      category: query,
+    });
   } catch (error) {
     next(error);
   }
@@ -31,7 +34,7 @@ async function getProductsByCategory(req, res, next) {
     } else {
       products = await Product.findByCategory(category);
     }
-    
+
     category = capitalizeFirstLetter(category);
     res.render('customer/products/all-products', {
       products,
@@ -46,7 +49,18 @@ async function getProductsByCategory(req, res, next) {
 async function getProductDetails(req, res, next) {
   try {
     const product = await Product.findById(req.params.id);
-    res.render('customer/products/product-details', { product: product });
+
+    let complementariesProducts;
+    if (product.complementaries && product.complementaries.length > 0) {
+      complementariesProducts = await Product.findMultiple(
+        product.complementaries
+      );
+    }
+
+    res.render('customer/products/product-details', {
+      product,
+      complementariesProducts,
+    });
   } catch (error) {
     next(error);
   }

@@ -14,7 +14,7 @@
 			<% for (const product of products) { %>
 				<li>
 					<a href="/product-details/<%= product.id %>" >
-						<%- include('../../shared/includes/product-item', { product: product, sliderView: false }) %>
+						<%- include('../../shared/includes/product-item', { product: product, editMode: false}) %>
 					</a>
 				</li>
 			<% } %>

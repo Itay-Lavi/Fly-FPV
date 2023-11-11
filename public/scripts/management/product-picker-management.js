@@ -9,9 +9,30 @@ const btnStatus = {
 
 const productButtons = document.querySelectorAll('.product-item button');
 
-async function addOrRemoveFromSlider({ productId, csrfToken, method }) {
+async function handleComplementary({ choosenProductId, csrf, method }) {
+    const productId = document.querySelector('body').dataset.productid;
+ 
   const response = await fetch(
-    `/admin/products/slider/${productId}?_csrf=${csrfToken}`,
+    `/admin/products/${productId}/complementary/?_csrf=${csrf}`,
+    {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        choosenProductId,
+      }),
+    }
+  );
+
+  if (response.status != 200) {
+    throw new Error('Something went wrong!');
+  }
+}
+
+async function handleSlider({ choosenProductId, csrf, method }) {
+  const response = await fetch(
+    `/admin/products/${choosenProductId}/slider/?_csrf=${csrf}`,
     {
       method,
     }
@@ -39,16 +60,22 @@ async function handleButtonClick(event) {
 
   try {
     const method = initialButtonText === add ? 'POST' : 'DELETE';
-    await addOrRemoveFromSlider({
-      csrfToken: csrf,
-      productId: productid,
-      method,
-    });
+    const arguments = { csrf, choosenProductId: productid, method };
+
+    const currentUrl = window.location.pathname;
+    const page = currentUrl.includes('slider') ? 'slider' : 'complementary';
+
+    if (page == 'slider') {
+      await handleSlider(arguments);
+    } else {
+      await handleComplementary(arguments);
+    }
     buttonElement.innerText = initialButtonText === add ? added : removed;
     await sleep(3);
     buttonElement.innerText = initialButtonText === add ? remove : add;
     buttonElement.disabled = false;
   } catch (err) {
+    console.log(err);
     buttonElement.innerText = error;
     await sleep(3);
     buttonElement.disabled = false;
