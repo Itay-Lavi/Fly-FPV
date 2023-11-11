@@ -7,3 +7,6 @@ global.STRIPE_API_KEY = process.env.STRIPE_API_KEY;
 global.CLOUD_NAME = process.env.CLOUD_NAME;
 global.CLOUD_API_KEY = process.env.CLOUD_API_KEY;
 global.CLOUD_API_SECRET = process.env.CLOUD_API_SECRET;
+
+global.MAILER_USERNAME = process.env.MAILER_USERNAME;
+global.MAILER_PASSWORD = process.env.MAILER_PASSWORD;

@@ -57,6 +57,7 @@ body {
 main {
   flex: 1;
   width: 90%;
+  min-height: 62vh;
   max-width: 60rem;
   margin: 0 auto;
 }

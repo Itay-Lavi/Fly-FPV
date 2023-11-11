@@ -2,9 +2,11 @@ const User = require('../../models/user-model');
 const PasswordResetToken = require('../../models/token-model');
 const sessionFlash = require('../../util/session-flash');
 const validation = require('../../util/validation');
-const mailer = require('../../util/mailer');
+const sendEmail = require('../../util/mailer/nodemailer');
+const mailerTemplates = require('../../util/mailer/templates');
 
 async function getForgot(req, res, next) {
+  PasswordResetToken.deleteExpiredTokens();
   const sessionErrorData = sessionFlash.getSessionData(req, {
     email: '',
   });
@@ -48,12 +50,13 @@ async function forgot(req, res, next) {
     return;
   }
 
+   PasswordResetToken.deleteExpiredTokens();
   const passwordResetTokenModel = new PasswordResetToken({ userId: user.id });
-  const emailData = mailer.resetPasswordTemplate(passwordResetTokenModel.token);
+  const emailTemplate = mailerTemplates.resetPasswordTemplate(passwordResetTokenModel.token);
 
   try {
     await passwordResetTokenModel.saveToken();
-    await mailer.sendEmail(formData.email, emailData.subject, emailData.html);
+    await sendEmail(formData.email, emailTemplate.subject, emailTemplate.html);
   } catch (err) {
     console.log(err);
   }
@@ -106,6 +109,9 @@ async function reset(req, res, next) {
     );
   }
 
+  await PasswordResetToken.deleteExpiredTokens();
+
+  
   let passwordResetToken;
   try {
     passwordResetToken = await PasswordResetToken.findToken(token);

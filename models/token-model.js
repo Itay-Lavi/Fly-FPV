@@ -17,7 +17,6 @@ class PasswordResetToken {
     if (data._id) {
       this.id = data._id.toString();
     }
-    this.deleteExpiredTokens();
   }
 
   static objectToModel(data) {
@@ -35,7 +34,7 @@ class PasswordResetToken {
     return PasswordResetToken.objectToModel(result);
   }
 
-   async deleteExpiredTokens() {
+   static async deleteExpiredTokens() {
     const twentyFourHoursAgo = new Date();
     twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
 

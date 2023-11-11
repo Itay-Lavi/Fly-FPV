@@ -3,6 +3,9 @@ const authUtil = require('../../util/authentication');
 const validation = require('../../util/validation');
 const sessionFlash = require('../../util/session-flash');
 
+const sendEmail = require('../../util/mailer/nodemailer');
+const mailerTemplates = require('../../util/mailer/templates');
+
 function getSignup(req, res) {
   const sessionErrorData = sessionFlash.getSessionData(req, {
     email: '',
@@ -68,6 +71,9 @@ async function signup(req, res, next) {
     authUtil.createUserSession(req, {_id: newUser.insertedId}, function () {
       res.redirect('/');
     });
+
+    const emailTemplate = mailerTemplates.welcomeTemplete(user.name);
+    sendEmail(user.email, emailTemplate.subject, emailTemplate.html);
   } catch (error) {
     return next(error);
   }
