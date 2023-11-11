@@ -18,14 +18,14 @@
 
 	<% if (!locals.isAuth) { %>
 		<div id="auth-items">
-			<li><a href="/signup">Signup</a></li>
+			<li><a href="/auth/signup">Signup</a></li>
 			<div class="divider"></div>
-			<li><a href="/login">Login</a></li>
+			<li><a href="/auth/login">Login</a></li>
 		</div>
 	  <% } %>
 	<% if (locals.isAuth) { %>
 	<li>
-	  <form action="/logout" method="POST">
+	  <form action="/auth/logout" method="POST">
 		<input type="hidden" name="_csrf" value="<%= locals.csrfToken %>" />
 		<button>Logout</button>
 	  </form>

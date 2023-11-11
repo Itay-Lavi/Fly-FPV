@@ -1,7 +1,7 @@
-const User = require('../models/user-model');
-const authUtil = require('../util/authentication');
-const validation = require('../util/validation');
-const sessionFlash = require('../util/session-flash');
+const User = require('../../models/user-model');
+const authUtil = require('../../util/authentication');
+const validation = require('../../util/validation');
+const sessionFlash = require('../../util/session-flash');
 
 function getSignup(req, res) {
   const sessionErrorData = sessionFlash.getSessionData(req, {
@@ -129,9 +129,9 @@ function logout(req, res) {
 }
 
 module.exports = {
-  getSignup: getSignup,
-  signup: signup,
-  getLogin: getLogin,
-  login: login,
-  logout: logout,
+  getSignup,
+  signup,
+  getLogin,
+  login,
+  logout,
 };

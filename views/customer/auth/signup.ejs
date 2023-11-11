@@ -12,7 +12,7 @@
 				<p><%= inputData.message %></p>
 			</section>
 			<% }%>
-		<form class="main-form auth-form" action="/signup" method="POST">
+		<form class="main-form auth-form" action="/auth/signup" method="POST">
 			<input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
 			<p>
 				<label for="email">E-mail</label>
@@ -44,7 +44,7 @@
 				<input type="text" id="city" name="city"  value="<%= inputData.city %>" required>
 			</p>
 			<button class="btn">Create Account</button>
-		   <p id="switch-form"><a href="/login">Login instead</a></p>
+		   <p id="switch-form"><a href="/auth/login">Login instead</a></p>
 		</form>
 	</main>
 <%- include('../../shared/includes/footer') %>

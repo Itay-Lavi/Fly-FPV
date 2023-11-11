@@ -12,7 +12,7 @@
 				<p><%= inputData.message %></p>
 			</section>
 			<% }%>
-		<form class="main-form auth-form" action="/login" method="POST">
+		<form class="main-form auth-form" action="/auth/login" method="POST">
 			<input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
 			<p>
 				<label for="email">E-mail</label>
@@ -23,7 +23,8 @@
 				<input type="password" id="password" name="password" value="<%= inputData.password %>" maxlength="16" required>
 			</p>
 			<button class="btn">Login</button>
-		   <p id="switch-form"><a href="/signup">Create new user</a></p>
+		   <p id="switch-form"><a href="/auth/signup">Create new user</a></p>
+	       <a href="/auth/forgot">Forgot password</a>
 		</form>
 	</main>
 <%- include('../../shared/includes/footer') %>
