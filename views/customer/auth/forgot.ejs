@@ -1,0 +1,25 @@
+<%- include('../../shared/includes/head', {pageTitle: 'Forgot Password'}) %>
+<script src="/scripts/loading.js" defer></script>
+<link rel="stylesheet" href="/styles/forms.css">
+<link rel="stylesheet" href="/styles/auth.css">
+</head>
+<body>
+<%- include('../../shared/includes/header') %>
+	<main>
+		<h1>Forgot Password</h1>
+		<% if (inputData.message) {%>
+			<section class="alert <%= !inputData.hasError && 'alert-success' %>">
+				<h2><%= inputData.hasError ? 'Invalid Input' : 'Success' %></h2>
+				<p><%= inputData.message %></p>
+			</section>
+			<% }%>
+		<form class="main-form auth-form" action="/auth/forgot" method="POST">
+			<input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
+			<p>
+         	  <label for="email">Email:</label>
+              <input type="email" name="email" value="<%= inputData.email %>" required>
+		    </p>
+            <button type="submit" class="btn">Reset Password</button>
+		</form>
+	</main>
+<%- include('../../shared/includes/footer') %>

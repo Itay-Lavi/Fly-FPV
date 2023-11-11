@@ -17,8 +17,8 @@ function getSignup(req, res) {
   res.render('customer/auth/signup', { inputData: sessionErrorData });
 }
 
-async function signup(req, res) {
-  const body = req.body; //body
+async function signup(req, res, next) {
+  const body = req.body;
 
   const formData = {
     email: body.email,
@@ -31,7 +31,7 @@ async function signup(req, res) {
 
   if (
     !validation.userDetailsIsValid(...Object.values(formData)) ||
-    !validation.emailIsConfirm(body.email, body['confirm-email'])
+    !validation.fieldIsConfirm(body.email, body['confirm-email'])
   ) {
     sessionFlash.flashDataToSession(
       req,
@@ -41,13 +41,13 @@ async function signup(req, res) {
         ...formData,
       },
       function () {
-        res.redirect('/signup');
+        res.redirect('/auth/signup');
       }
     );
     return;
   }
 
-  const user = new User(...Object.values(formData));
+  const user = new User(formData);
 
   try {
     const existsAlready = await user.existsAlready();
@@ -59,7 +59,7 @@ async function signup(req, res) {
           ...formData,
         },
         function () {
-          res.redirect('/signup');
+          res.redirect('/auth/signup');
         }
       );
       return;
@@ -88,7 +88,7 @@ async function login(req, res) {
     password: req.body.password,
   };
 
-  const user = new User(formData.email, formData.password);
+  const user = new User(formData);
   let existingUser;
   try {
     existingUser = await user.getUserWithSameEmail();
@@ -102,7 +102,7 @@ async function login(req, res) {
 
   if (!existingUser) {
     sessionFlash.flashDataToSession(req, sessionErrorData, function () {
-      res.redirect('/login');
+      res.redirect('/auth/login');
     });
     return;
   }
@@ -113,7 +113,7 @@ async function login(req, res) {
 
   if (!passwordIsCorrect) {
     sessionFlash.flashDataToSession(req, sessionErrorData, function () {
-      res.redirect('/login');
+      res.redirect('/auth/login');
     });
     return;
   }

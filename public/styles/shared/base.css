@@ -106,6 +106,8 @@ a {
 }
 
 .alert {
+  max-width: 30rem;
+  margin: 0 auto;
   border-radius: var(--border-radius-small);
   background-color: var(--color-error-100);
   color: var(--color-error-500);
@@ -116,6 +118,11 @@ a {
   font-size: 1rem;
   margin: var(--space-2) 0;
   text-transform: uppercase;
+}
+
+.alert-success {
+  background-color: green;
+  color: var(--color-primary-500-contrast);
 }
 
 .badge {

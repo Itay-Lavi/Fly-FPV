@@ -12,8 +12,8 @@ function getSessionData(req, defaultValues) {
   return sessionData;
 }
  
-function flashDataToSession(req, data, action) {
-  req.session.flashedData = { hasError: true, ...data };
+function flashDataToSession(req, data, action, error = true) {
+  req.session.flashedData = { hasError: error, ...data };
   req.session.save(action);
 }
 

@@ -2,12 +2,18 @@ function isEmpty(value) {
   return !value || value.trim() === '';
 }
 
+function emailIsValid(email) {
+  return (email && email.includes('@' && '.'));
+}
+
+function passwordIsValid(password) {
+  return (password && password.trim().length >= 6);
+}
+
 function userCredentailsIsValid(email, password) {
   return (
-    email &&
-    email.includes('@' && '.') &&
-    password &&
-    password.trim().length >= 6
+    emailIsValid(email) &&
+    passwordIsValid(password)
   );
 }
 
@@ -30,12 +36,14 @@ function productDetailsIsValid(formData) {
 	return true;
 }
 
-function emailIsConfirm(email, confirmEmail) {
+function fieldIsConfirm(email, confirmEmail) {
 	return email === confirmEmail;
 }
 
 module.exports = {
 	userDetailsIsValid,
 	productDetailsIsValid,
-  emailIsConfirm
+  fieldIsConfirm,
+  emailIsValid,
+  passwordIsValid
 };

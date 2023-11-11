@@ -1,4 +1,5 @@
 <%- include('../../shared/includes/head', {pageTitle: 'Signup'}) %>
+<script src="/scripts/loading.js" defer></script>
 <link rel="stylesheet" href="/styles/forms.css">
 <link rel="stylesheet" href="/styles/auth.css">
 </head>
@@ -43,7 +44,7 @@
 				<label for="city">City</label>
 				<input type="text" id="city" name="city"  value="<%= inputData.city %>" required>
 			</p>
-			<button class="btn">Create Account</button>
+			<button type="submit" class="btn">Create Account</button>
 		   <p id="switch-form"><a href="/auth/login">Login instead</a></p>
 		</form>
 	</main>

@@ -4,21 +4,49 @@ const { ObjectId } = require('mongodb');
 const db = require('../data/database');
 
 class User {
-  constructor(email, password, fullname, street, postal, city) {
-    this.email = email;
-    this.password = password;
-    this.name = fullname;
+  constructor(userData) {
+    this.email = userData.email;
+    this.password = userData.password;
+    this.name = userData.fullname;
     this.address = {
-      street: street,
-      postalCode: postal,
-      city: city,
+      street: userData.street,
+      postalCode: userData.postal,
+      city: userData.city,
     };
+
+    if (userData._id) {
+      this.id = userData._id.toString();
+    }
   }
 
-  static findById(userId) {
+  static objectToUser(userData) {
+    if (!userData) {
+      const error = new Error('Could not find user with provided id');
+      error.code = 404;
+      throw error;
+    }
+    return new User(userData);
+  }
+
+  static async findById(userId) {
     const uid = new ObjectId(userId);
 
-	return db.getDb().collection('users').findOne({_id: uid}, { projection: { password: 0 } });
+    const user = await db
+      .getDb()
+      .collection('users')
+      .findOne({ _id: uid }, { projection: { password: 0 } });
+
+ 
+    return User.objectToUser(user);
+  }
+
+  static async findByEmail(email) {
+    const user = await db
+      .getDb()
+      .collection('users')
+      .findOne({ email: email }, { projection: { password: 0 } });
+
+    return User.objectToUser(user);
   }
 
   getUserWithSameEmail() {
@@ -34,7 +62,7 @@ class User {
   }
 
   async signup() {
-    const hashedPassword = await bcrypt.hash(this.password, 12);
+    const hashedPassword = await this.hashPassword(this.password);
 
     const result = await db.getDb().collection('users').insertOne({
       email: this.email,
@@ -43,6 +71,19 @@ class User {
       address: this.address,
     });
     return result;
+  }
+
+  async changePassword(newPassword) {
+    const hashedPassword = await this.hashPassword(newPassword);
+    const result = await db
+      .getDb()
+      .collection('users')
+      .updateOne({ _id: new ObjectId(this.id) }, { $set: { password: hashedPassword } });
+    return result;
+  }
+
+   hashPassword(password) {
+   return bcrypt.hash(password, 12);
   }
 
   hasMatchingPassword(hashedPassword) {
