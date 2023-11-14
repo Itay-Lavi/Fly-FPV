@@ -7,7 +7,7 @@ const sendEmail = require('../../util/mailer/nodemailer');
 const mailerTemplates = require('../../util/mailer/templates');
 
 function getSignup(req, res) {
-  const sessionErrorData = sessionFlash.getSessionData(req, {
+  const sessionErrorData = sessionFlash.getAlertSessionData(req, {
     email: '',
     confirmEmail: '',
     password: '',
@@ -26,7 +26,7 @@ async function signup(req, res, next) {
   const formData = {
     email: body.email,
     password: body.password,
-    fullname: body.fullname,
+    name: body.fullname,
     street: body.street,
     postal: body.postal,
     city: body.city,
@@ -36,7 +36,7 @@ async function signup(req, res, next) {
     !validation.userDetailsIsValid(...Object.values(formData)) ||
     !validation.fieldIsConfirm(body.email, body['confirm-email'])
   ) {
-    sessionFlash.flashDataToSession(
+    sessionFlash.flashAlertToSession(
       req,
       {
         message: 'Invalid input - please check your data.',
@@ -55,7 +55,7 @@ async function signup(req, res, next) {
   try {
     const existsAlready = await user.existsAlready();
     if (existsAlready) {
-      sessionFlash.flashDataToSession(
+      sessionFlash.flashAlertToSession(
         req,
         {
           message: 'User exists already! Try logging in instead!',
@@ -80,7 +80,7 @@ async function signup(req, res, next) {
 }
 
 function getLogin(req, res, next) {
-  const sessionErrorData = sessionFlash.getSessionData(req, {
+  const sessionErrorData = sessionFlash.getAlertSessionData(req, {
     email: '',
     password: '',
   });
@@ -107,7 +107,7 @@ async function login(req, res) {
   };
 
   if (!existingUser) {
-    sessionFlash.flashDataToSession(req, sessionErrorData, function () {
+    sessionFlash.flashAlertToSession(req, sessionErrorData, function () {
       res.redirect('/auth/login');
     });
     return;
@@ -118,7 +118,7 @@ async function login(req, res) {
   );
 
   if (!passwordIsCorrect) {
-    sessionFlash.flashDataToSession(req, sessionErrorData, function () {
+    sessionFlash.flashAlertToSession(req, sessionErrorData, function () {
       res.redirect('/auth/login');
     });
     return;

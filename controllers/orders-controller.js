@@ -1,7 +1,50 @@
-const stripe = require('stripe')(STRIPE_API_KEY);
+const paypalWebhooks = require('../util/paypal/webhooks');
+const paypalOrders = require('../util/paypal/orders');
 
 const Order = require('../models/order-model');
 const User = require('../models/user-model');
+
+async function webhookHandler(req, res) {
+  const webhookEvent = req.body;
+  const headers = req.headers;
+
+  const token = webhookEvent['resource']['id'];
+  const payerId = webhookEvent['resource']['payer']['payer_id'];
+
+  if (webhookEvent['event_type'] !== 'CHECKOUT.ORDER.APPROVED') {
+    return;
+  }
+
+  const accessToken = await paypalOrders.getAccessToken();
+  const verified = await paypalWebhooks.verifyWebhookSignature(
+    accessToken,
+    headers,
+    webhookEvent
+  );
+
+  if (!verified) {
+    return console.log(
+      'Webhook signature verification failed, token: ' + token
+    );
+  }
+
+  try {
+    const order = await Order.findByToken(token);
+    const orderStatus = order.paymentData.status;
+    if (
+      orderStatus === Order.statusOptions.paymentPending ||
+      orderStatus === Order.statusOptions.unpaid
+    ) {
+      order.paymentData.status = Order.statusOptions.preparingForShipment;
+      order.paymentData.payerId = payerId;
+      await order.save();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  res.status(200).send();
+}
 
 async function getOrders(req, res) {
   try {
@@ -17,10 +60,24 @@ async function getOrders(req, res) {
 async function addOrder(req, res, next) {
   const cart = res.locals.cart;
 
+  const accessToken = await paypalOrders.getAccessToken();
+
+  let userData;
+  try {
+    userData = await User.findById(res.locals.uid);
+  } catch (error) {
+    return next(error);
+  }
+
+  const session = await paypalOrders.createOrder(accessToken, cart, userData);
+
   let orderId;
   try {
-    const userDoc = await User.findById(res.locals.uid);
-    const newOrder = new Order(cart, userDoc);
+    const paymentData = {
+      paymentId: session.id,
+      status: Order.statusOptions.unpaid,
+    };
+    const newOrder = new Order({ productData: cart, userData, paymentData });
     orderId = (await newOrder.save()).insertedId;
   } catch (error) {
     return next(error);
@@ -28,50 +85,46 @@ async function addOrder(req, res, next) {
 
   req.session.cart = null;
 
-  const session = await stripe.checkout.sessions.create({
-    line_items: cart.items.map(function (item) {
-      return {
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: item.product.title,
-          },
-          unit_amount: +item.product.price.toFixed(2) * 100,
-        },
-        quantity: item.quantity,
-      };
-    }),
-    mode: 'payment',
-    success_url: `http://${HOSTNAME}/orders/success/${orderId}`,
-    cancel_url: `http://${HOSTNAME}/orders/failure/${orderId}`,
-  });
-
-  res.redirect(303, session.url);
+  res.redirect(303, session.payerLink);
 }
 
 async function getSuccess(req, res) {
-  const order = await Order.findById(req.params.id);
-  if (order.status != Order.statusOptions.unpaid) {
-    return res.render('shared/404');
-  };
-	res.render('customer/orders/success');
-	order.status = Order.statusOptions.pending;
-	await order.save();
+  const { token, PayerID } = req.query;
+
+  try {
+    const order = await Order.findByToken(token);
+    if (order.paymentData.status === Order.statusOptions.unpaid) {
+      order.paymentData.status = Order.statusOptions.paymentPending;
+      order.paymentData.payerId = PayerID;
+      await order.save();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  res.render('customer/orders/success');
 }
 
 async function getFailure(req, res) {
-  const order = await Order.findById(req.params.id);
-  if (order.status != Order.statusOptions.unpaid) {
-    return res.render('shared/404');
-  };
+  const { token } = req.query;
+
+  try {
+    const order = await Order.findByToken(token);
+    if (order.paymentData.status === Order.statusOptions.unpaid) {
+      order.paymentData.status = Order.statusOptions.paymentFailed;
+      await order.save();
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
   res.render('customer/orders/failure');
-  order.status = Order.statusOptions.paymentFailed;
-	await order.save();
 }
 
 module.exports = {
-  getOrders: getOrders,
-  addOrder: addOrder,
-  getSuccess: getSuccess,
-  getFailure: getFailure,
+  webhookHandler,
+  getOrders,
+  addOrder,
+  getSuccess,
+  getFailure,
 };

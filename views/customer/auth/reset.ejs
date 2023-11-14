@@ -13,7 +13,7 @@
 				<p><%= inputData.message %></p>
 			</section>
 			<% }  %>
-		<form class="main-form auth-form" action="/auth/reset/<%= token %>" method="POST">
+		<form class="main-form auth-form loading-form" action="/auth/reset/<%= token %>" method="POST">
 			<input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
 			<p>
             	<label for="password">New Password:</label>

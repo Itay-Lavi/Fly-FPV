@@ -7,12 +7,8 @@ class User {
   constructor(userData) {
     this.email = userData.email;
     this.password = userData.password;
-    this.name = userData.fullname;
-    this.address = {
-      street: userData.street,
-      postalCode: userData.postal,
-      city: userData.city,
-    };
+    this.name = userData.name;
+    this.address = userData.address;
 
     if (userData._id) {
       this.id = userData._id.toString();

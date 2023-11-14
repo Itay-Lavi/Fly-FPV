@@ -6,8 +6,8 @@
     <div>
       <nav class="nav-items <%= locals.isAuth ? '' : 'small-vert-margin' %>"><%- include('nav-items') %></nav>
       <form class="search-form" method="GET" action="/products/search">
-        <label for="search-input"></label>
-        <input id="search-input" name="query" type="text" placeholder="Search" required/>
+        <label for="search-input-2"></label>
+        <input id="search-input-2" name="query" type="text" placeholder="Search" required/>
         <button type="submit">
           <i class="fa-solid fa-magnifying-glass fa-lg"></i>
         </button>
@@ -21,8 +21,8 @@
     </nav>
   </div>
   <form class="search-form mobile-search-form" method="GET" action="/products/search">
-    <label for="search-input"></label>
-    <input id="search-input" name="query" type="text" placeholder="Search" required/>
+    <label for="search-input-1"></label>
+    <input id="search-input-1" name="query" type="text" placeholder="Search" required/>
     <button type="submit">
       <i class="fa-solid fa-magnifying-glass fa-lg"></i>
     </button>

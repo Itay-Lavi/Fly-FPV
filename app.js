@@ -1,4 +1,6 @@
 const path = require('path');
+const fs = require('fs');
+const https = require('https');
 
 const express = require('express');
 const csrf = require('csurf');
@@ -30,6 +32,12 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+const options = {
+  key: fs.readFileSync('./public/certs/private.key'),
+  cert: fs.readFileSync('./public/certs/certificate.crt'),
+};
+const server = https.createServer(options, app);
+
 app.use(express.static('public'));
 app.use('/products/assets', express.static('product-data'));
 app.use(express.urlencoded({ extended: false }));
@@ -39,20 +47,20 @@ const sessionConfig = createSessionConfig();
 
 app.use(expressSession(sessionConfig));
 app.use(addProdctCategoriesMiddleware);
-app.use(csrf());
+// app.use(csrf());
 
 app.use(cartMiddleware);
 app.use(updateCartPricesMiddleware);
 
-app.use(addCsrfTokenMiddleware);
+// app.use(addCsrfTokenMiddleware);
 app.use(checkAuthStatusMiddleware);
 
 app.use(baseRoutes);
 app.use('/auth', authRoutes);
 app.use(productsRoutes);
 app.use('/cart', cartRoutes);
-app.use(protectRoutesMiddleware);
 app.use('/orders', ordersRoutes);
+app.use(protectRoutesMiddleware);
 app.use('/admin', adminRoutes);
 
 app.use(notFoundMiddleware);
@@ -61,7 +69,7 @@ app.use(errorHandlerMiddleware);
 
 db.connectToDatabase()
   .then(function () {
-    app.listen(PORT);
+    server.listen(PORT);
     console.log('listening on port ' + PORT);
   })
   .catch(function (error) {

@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "engines": {
-    "node": "v21.1.0"
-  },
   "scripts": {
     "start": "nodemon app.js"
   },
@@ -13,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.41.0",
     "connect-mongodb-session": "^3.1.1",
@@ -24,7 +22,7 @@
     "mongodb": "^6.2.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.7",
-    "stripe": "^14.3.0",
+    "qs": "^6.11.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

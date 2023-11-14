@@ -1,6 +1,9 @@
 <%- include('../../shared/includes/head', {pageTitle: 'Your Cart'}) %>
 <link rel="stylesheet" href="/styles/cart.css">
 <script src="/scripts/management/cart-item-management.js" defer></script>
+<%if (locals.isAuth && locals.cart.totalQuantity > 0) { %>
+<script src="/scripts/loading.js" defer></script>
+<% }%>
 </head>
 <body>
 <%- include('../../shared/includes/header') %>
@@ -16,9 +19,9 @@
 	  <div id="cart-total">
 		<p>Total: $<span id="cart-total-price"><%= locals.cart.totalPrice.toFixed(2) %></span></p>
        <%if (locals.isAuth && locals.cart.totalQuantity > 0) { %>
-		<form action="/orders" method="POST">
+		<form class="loading-form" action="/orders" method="POST">
 			<input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
-			<button class="btn">Buy Products</button>
+			<button type="submit" class="btn">Buy Products</button>
 		</form>
 		<% } else if (locals.isAuth) {%>
 			<form action="/" method="GET">
