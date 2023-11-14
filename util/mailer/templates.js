@@ -50,7 +50,7 @@ function resetPasswordTemplate(token) {
   <div class="logo">FlyFPV</div>
   <h2>Password Reset</h2>
   <p>You have requested a password reset. Click the link below to reset your password:</p>
-  <a href="http://${HOSTNAME}/auth/reset/${token}" target="_blank" class="reset-link">Reset Password</a>
+  <a href="${HOSTNAME}/auth/reset/${token}" target="_blank" class="reset-link">Reset Password</a>
   <p>If you did not request a password reset, please ignore this email.</p>
   </div>
   </body>
@@ -116,7 +116,7 @@ function welcomeTemplete(fullname) {
             <h2>Welcome to Fly FPV Shop, ${fullname}</h2>
             <p class="welcome-message">Thank you for choosing Fly FPV for all your FPV needs. We are thrilled to have you on board</p>
             <p>Explore our exciting range of products and gear designed for an amazing FPV experience</p>
-            <a href="http://${HOSTNAME}" target="_blank" class="shop-link">Explore the Shop</a>
+            <a href="${HOSTNAME}" target="_blank" class="shop-link">Explore the Shop</a>
             <p>If you have any questions or need assistance, feel free to contact our support team</p>
         </div>
     </body>

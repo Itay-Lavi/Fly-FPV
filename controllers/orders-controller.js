@@ -8,27 +8,27 @@ async function webhookHandler(req, res) {
   const webhookEvent = req.body;
   const headers = req.headers;
 
-  const token = webhookEvent['resource']['id'];
-  const payerId = webhookEvent['resource']['payer']['payer_id'];
-
-  if (webhookEvent['event_type'] !== 'CHECKOUT.ORDER.APPROVED') {
-    return;
-  }
-
-  const accessToken = await paypalOrders.getAccessToken();
-  const verified = await paypalWebhooks.verifyWebhookSignature(
-    accessToken,
-    headers,
-    webhookEvent
-  );
-
-  if (!verified) {
-    return console.log(
-      'Webhook signature verification failed, token: ' + token
-    );
-  }
-
   try {
+    const token = webhookEvent['resource']['id'];
+    const payerId = webhookEvent['resource']['payer']['payer_id'];
+
+    if (webhookEvent['event_type'] !== 'CHECKOUT.ORDER.APPROVED') {
+      return;
+    }
+
+    const accessToken = await paypalOrders.getAccessToken();
+    const verified = await paypalWebhooks.verifyWebhookSignature(
+      accessToken,
+      headers,
+      webhookEvent
+    );
+
+    if (!verified) {
+      return console.log(
+        'Webhook signature verification failed, token: ' + token
+      );
+    }
+
     const order = await Order.findByToken(token);
     const orderStatus = order.paymentData.status;
     if (

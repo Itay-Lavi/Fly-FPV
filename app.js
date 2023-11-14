@@ -3,7 +3,6 @@ const fs = require('fs');
 const https = require('https');
 
 const express = require('express');
-const csrf = require('csurf');
 const expressSession = require('express-session');
 
 require('./config/constants');
@@ -12,7 +11,7 @@ const createSessionConfig = require('./config/session');
 const db = require('./data/database');
 
 const errorHandlerMiddleware = require('./middlewares/error-handler-middleware');
-const addCsrfTokenMiddleware = require('./middlewares/auth/csrf-token-middleware');
+const csrfMiddleware = require('./middlewares/auth/csrf-token-middleware');
 const checkAuthStatusMiddleware = require('./middlewares/auth/auth-check-middleware');
 const protectRoutesMiddleware = require('./middlewares/auth/protect-routes-middleware');
 const cartMiddleware = require('./middlewares/cart-middleware');
@@ -47,12 +46,12 @@ const sessionConfig = createSessionConfig();
 
 app.use(expressSession(sessionConfig));
 app.use(addProdctCategoriesMiddleware);
-// app.use(csrf());
+app.use(csrfMiddleware.activeCSRFToken);
 
 app.use(cartMiddleware);
 app.use(updateCartPricesMiddleware);
 
-// app.use(addCsrfTokenMiddleware);
+app.use(csrfMiddleware.addCsrfToken);
 app.use(checkAuthStatusMiddleware);
 
 app.use(baseRoutes);
