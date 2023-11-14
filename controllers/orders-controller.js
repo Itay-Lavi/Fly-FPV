@@ -59,26 +59,19 @@ async function getOrders(req, res) {
 
 async function addOrder(req, res, next) {
   const cart = res.locals.cart;
-
+  try {
   const accessToken = await paypalOrders.getAccessToken();
 
-  let userData;
-  try {
-    userData = await User.findById(res.locals.uid);
-  } catch (error) {
-    return next(error);
-  }
-
+  const userData = await User.findById(res.locals.uid);
+   
   const session = await paypalOrders.createOrder(accessToken, cart, userData);
 
-  let orderId;
-  try {
     const paymentData = {
       paymentId: session.id,
       status: Order.statusOptions.unpaid,
     };
     const newOrder = new Order({ productData: cart, userData, paymentData });
-    orderId = (await newOrder.save()).insertedId;
+    await newOrder.save();
   } catch (error) {
     return next(error);
   }
