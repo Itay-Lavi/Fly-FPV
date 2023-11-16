@@ -50,7 +50,7 @@ async function signup(req, res, next) {
     return;
   }
 
-  const user = new User(formData);
+  const user = new User({email: body.email, password: body.password, name: body.fullname, address: {street: body.street, postal: body.postal, city: body.city}});
 
   try {
     const existsAlready = await user.existsAlready();
