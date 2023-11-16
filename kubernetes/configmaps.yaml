@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: mongodb-config
 data:
-  MONGO_INITDB_ROOT_USERNAME: user
-  MONGO_INITDB_ROOT_PASSWORD: password
+  MONGO_INITDB_ROOT_USERNAME: 'user'
+  MONGO_INITDB_ROOT_PASSWORD: 'password'
 
 ---
 
@@ -13,21 +13,21 @@ kind: ConfigMap
 metadata:
   name: node-config
 data:
-  HOSTNAME: https://flyfpv.shop
-  PORT: 8080
+  HOSTNAME: 'https://flyfpv.shop'
+  PORT: '8080'
 
-  MONGODB_URL: mongodb://user:password@mongodb-service.default:27017
-  SESSION_SECRET: 
+  MONGODB_URL: 'mongodb://user:password@mongodb-service.default:27017'
+  SESSION_SECRET: ''
 
-  STRIPE_API_KEY: 
+  STRIPE_API_KEY: ''
   
-  CLOUD_NAME: 
-  CLOUD_API_KEY: 
-  CLOUD_API_SECRET: 
+  CLOUD_NAME: ''
+  CLOUD_API_KEY: ''
+  CLOUD_API_SECRET: ''
 
-  MAILER_USERNAME: 
-  MAILER_PASSWORD: 
+  MAILER_USERNAME: ''
+  MAILER_PASSWORD: ''
 
-  PAYPAL_CLIENT_ID: 
-  PAYPAL_CLIENT_SECRET: 
-  PAYPAL_WEBHOOK_ID: 
+  PAYPAL_CLIENT_ID: ''
+  PAYPAL_CLIENT_SECRET: ''
+  PAYPAL_WEBHOOK_ID: ''

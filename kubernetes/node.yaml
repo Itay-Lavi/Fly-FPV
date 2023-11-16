@@ -26,6 +26,10 @@ spec:
           envFrom:
             - configMapRef:
                 name: node-config
+      volumes:
+        - name: ssl-volume
+          persistentVolumeClaim:
+            claimName: ssl-pvc
 
 ---
 
