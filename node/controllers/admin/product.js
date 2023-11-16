@@ -13,7 +13,7 @@ async function getProducts(req, res, next) {
 }
 
 function getNewProduct(req, res) {
-  const sessionErrorData = sessionFlash.getSessionData(req, {
+  const sessionErrorData = sessionFlash.getAlertSessionData(req, {
     title: '',
     summary: '',
     price: '',
@@ -28,7 +28,7 @@ async function createNewProduct(req, res, next) {
   const product = new Product(formData);
 
   if (!req.file || !validation.productDetailsIsValid(req.body)) {
-    sessionFlash.flashDataToSession(
+    sessionFlash.flashAlertToSession(
       req,
       {
         message: 'Invalid - please check your data.',
@@ -63,7 +63,7 @@ async function getUpdateProduct(req, res, next) {
     next(error);
   }
 
-  const sessionErrorData = sessionFlash.getSessionData(req, product);
+  const sessionErrorData = sessionFlash.getAlertSessionData(req, product);
 
   res.render('admin/products/update-product', { product: sessionErrorData, categories: Product.productCategories });
 }
@@ -74,7 +74,7 @@ async function updateProduct(req, res, next) {
   const product = new Product({...formData, slider: oldProduct.slider});
 
   if (!validation.productDetailsIsValid(formData)) {
-    sessionFlash.flashDataToSession(
+    sessionFlash.flashAlertToSession(
       req,
       {
         message: 'Invalid - please check your data.',
