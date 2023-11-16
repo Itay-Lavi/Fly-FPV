@@ -1,5 +1,5 @@
 function handleErrors(error, req, res, next) {
-  if (!error.code == 'EBADCSRFTOKEN') {
+  if (error.code !== 'EBADCSRFTOKEN') {
     console.log(error);
   }
   if (error.code === 404) {

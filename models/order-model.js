@@ -30,7 +30,7 @@ class Order {
   }
 
   static isStatusValid(inputStatus) {
-    return Object.values(statusOptions).includes(inputStatus);
+    return Object.values(Order.statusOptions).includes(inputStatus);
   }
 
   static transformOrderDocument(orderDoc) {
