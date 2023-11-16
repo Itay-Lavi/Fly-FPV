@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: zerossl-bot-cron
+spec:
+  schedule: '30 1 1,15 * *' 
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: zerossl-bot
+        spec:
+          restartPolicy: 'Never'
+          containers:
+            - name: zerossl-bot
+              image: itailavi/zerossl-bot:latest
+              imagePullPolicy: Always
+              env:
+                - name: ZEROSSL_ACCESS_KEY
+                  value: ''
+                - name: EMAIL
+                  value: ''
+                - name: DOMAIN
+                  value: 'flyfpv.shop'
+                - name: DEPLOYMENT_SELECTOR_ARR
+                  value: 'app=node'
+                - name: MAIN_SERVICE_NAME
+                  value: 'node-service'
+                - name: BOT_SERVICE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: service-config
+                      key: service
+              volumeMounts:
+                - mountPath: /root/ssl
+                  name: ssl-volume
+          volumes:
+            - name: ssl-volume
+              persistentVolumeClaim:
+                claimName: ssl-pvc
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-config
+data:
+  service: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: zerossl-bot-service
+    spec:
+      type: NodePort
+      selector:
+        app: zerossl-bot
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+          nodePort: 80

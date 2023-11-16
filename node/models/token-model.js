@@ -46,6 +46,11 @@ class PasswordResetToken {
 
   async saveToken() {
     const resetTokensCollection = db.getDb().collection('resetTokens');
+
+    try {
+      resetTokensCollection.deleteMany({ userId: this.userId });
+    } catch (e) {}
+
     const result = await resetTokensCollection.insertOne({
       userId: this.userId,
       token: this.token,

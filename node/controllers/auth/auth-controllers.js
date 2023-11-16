@@ -67,16 +67,35 @@ async function signup(req, res, next) {
       );
       return;
     }
-   const newUser = await user.signup();
-    authUtil.createUserSession(req, {_id: newUser.insertedId}, function () {
+
+    try {
+      const emailTemplate = mailerTemplates.welcomeTemplete(user.name);
+      await sendEmail(user.email, emailTemplate.subject, emailTemplate.html);
+    } catch (error) {
+      console.log(error);
+      sessionFlash.flashAlertToSession(
+        req,
+        {
+          message: 'Sorry but we got an error, please contact admin!',
+          ...formData,
+        },
+        function () {
+          res.redirect('/auth/signup');
+        }
+      );
+      return;
+    }
+
+
+    const newUser = await user.signup();
+    authUtil.createUserSession(req, { _id: newUser.insertedId }, function () {
       res.redirect('/');
     });
-
-    const emailTemplate = mailerTemplates.welcomeTemplete(user.name);
-    sendEmail(user.email, emailTemplate.subject, emailTemplate.html);
   } catch (error) {
-    return next(error);
+    next(error);
   }
+
+ 
 }
 
 function getLogin(req, res, next) {

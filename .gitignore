@@ -1,2 +1,5 @@
-/node_modules
-*.env
+move-file-command.txt
+kubernetes/configmaps.yaml
+kubernetes/zerossl-bot.yaml
+node/node_modules
+node/env
