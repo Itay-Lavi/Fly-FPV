@@ -1,6 +1,4 @@
 const path = require('path');
-const fs = require('fs');
-const https = require('https');
 
 const express = require('express');
 const expressSession = require('express-session');
@@ -30,12 +28,6 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
-const options = {
-  key: fs.readFileSync('./public/certs/private.key'),
-  cert: fs.readFileSync('./public/certs/certificate.crt'),
-};
-const server = https.createServer(options, app);
 
 app.use(express.static('public'));
 app.use('/products/assets', express.static('product-data'));
@@ -68,7 +60,7 @@ app.use(errorHandlerMiddleware);
 
 db.connectToDatabase()
   .then(function () {
-    server.listen(PORT);
+    app.listen(PORT);
     console.log('listening on port ' + PORT);
   })
   .catch(function (error) {
