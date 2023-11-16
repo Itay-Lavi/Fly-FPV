@@ -1,4 +1,4 @@
-function getSessionData(req, defaultValues) {
+function getAlertSessionData(req, defaultValues) {
   let sessionData = req.session.flashedData;
 
   if (!sessionData) {
@@ -12,12 +12,12 @@ function getSessionData(req, defaultValues) {
   return sessionData;
 }
  
-function flashDataToSession(req, data, action, error = true) {
+function flashAlertToSession(req, data, action, error = true) {
   req.session.flashedData = { hasError: error, ...data };
   req.session.save(action);
 }
 
 module.exports = {
-	getSessionData: getSessionData,
-  flashDataToSession: flashDataToSession,
+	 getAlertSessionData,
+   flashAlertToSession,
 };

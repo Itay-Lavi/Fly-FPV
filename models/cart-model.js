@@ -46,7 +46,7 @@ class Cart {
 
     for (const item of this.items) {
       this.totalQuantity += item.quantity;
-      this.totalPrice += this.totalPrice + item.totalPrice;
+      this.totalPrice += item.totalPrice;
     }
   }
 

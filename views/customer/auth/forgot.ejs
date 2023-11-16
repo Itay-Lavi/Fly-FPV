@@ -1,7 +1,7 @@
 <%- include('../../shared/includes/head', {pageTitle: 'Forgot Password'}) %>
-<script src="/scripts/loading.js" defer></script>
 <link rel="stylesheet" href="/styles/forms.css">
 <link rel="stylesheet" href="/styles/auth.css">
+<script src="/scripts/loading.js" defer></script>
 </head>
 <body>
 <%- include('../../shared/includes/header') %>
@@ -13,7 +13,7 @@
 				<p><%= inputData.message %></p>
 			</section>
 			<% }%>
-		<form class="main-form auth-form" action="/auth/forgot" method="POST">
+		<form class="main-form auth-form loading-form" action="/auth/forgot" method="POST">
 			<input type="hidden" name="_csrf" value="<%= locals.csrfToken %>">
 			<p>
          	  <label for="email">Email:</label>

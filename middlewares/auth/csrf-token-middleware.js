@@ -1,6 +1,21 @@
+const csrf = require('csurf');
+
 function addCsrfToken(req, res, next) {
+  try {
     res.locals.csrfToken = req.csrfToken();
-	next();
+  } catch (e) {}
+  next();
 }
 
-module.exports = addCsrfToken;
+function activeCSRFToken(req, res, next) {
+  if (req.path === '/orders/webhook') {
+    return next();
+  }
+  const csrfProtection = csrf();
+  csrfProtection(req, res, next);
+}
+
+module.exports = {
+  addCsrfToken,
+  activeCSRFToken,
+};

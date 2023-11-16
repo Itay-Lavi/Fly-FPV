@@ -7,7 +7,7 @@ const mailerTemplates = require('../../util/mailer/templates');
 
 async function getForgot(req, res, next) {
   PasswordResetToken.deleteExpiredTokens();
-  const sessionErrorData = sessionFlash.getSessionData(req, {
+  const sessionErrorData = sessionFlash.getAlertSessionData(req, {
     email: '',
   });
 
@@ -22,7 +22,7 @@ async function forgot(req, res, next) {
   };
 
   if (!validation.emailIsValid(formData.email)) {
-    sessionFlash.flashDataToSession(
+    sessionFlash.flashAlertToSession(
       req,
       {
         message: 'Invalid email, please check you write correctly.',
@@ -37,7 +37,7 @@ async function forgot(req, res, next) {
 
   const user = await User.findByEmail(formData.email).catch((err) => {});
   if (!user) {
-    sessionFlash.flashDataToSession(
+    sessionFlash.flashAlertToSession(
       req,
       {
         message: 'Email not found, please check you write correctly.',
@@ -61,7 +61,7 @@ async function forgot(req, res, next) {
     console.log(err);
   }
 
-  sessionFlash.flashDataToSession(
+  sessionFlash.flashAlertToSession(
     req,
     {
       message: 'Email sent, please check your inbox. tokens are valid for 24h',
@@ -77,7 +77,7 @@ async function forgot(req, res, next) {
 
 async function getReset(req, res, next) {
   const token = req.params.token;
-  const sessionErrorData = sessionFlash.getSessionData(req, {
+  const sessionErrorData = sessionFlash.getAlertSessionData(req, {
     password: '',
     confirmPassword: '',
   });
@@ -97,7 +97,7 @@ async function reset(req, res, next) {
   };
 
   function customSessionFlash(message) {
-    return sessionFlash.flashDataToSession(
+    return sessionFlash.flashAlertToSession(
       req,
       {
         message: message,
