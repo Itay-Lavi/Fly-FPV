@@ -1,0 +1,61 @@
+# SSL
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ssl-pv
+spec:
+  capacity:
+    storage: 100Mi
+  volumeMode: Filesystem
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data/ssl
+    type: DirectoryOrCreate
+    
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ssl-pvc
+spec:
+  volumeName: ssl-pv
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 100Mi
+apiVersion: v1
+
+---
+
+# Mongodb
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongodb-pv
+spec:
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/mongodb"
+    type: DirectoryOrCreate
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi

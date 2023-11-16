@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-nginx-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node
+  template:
+    metadata:
+      labels:
+        app: node
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: nginx
+          image: itailavi/flyfpv-nginx:latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: ssl-volume
+              mountPath: /etc/nginx/ssl
+        - name: node
+          image: itailavi/flyfpv-node:latest
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: node-config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-service
+spec:
+  selector:
+    app: node
+  type: LoadBalancer
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 80
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+      nodePort: 443
