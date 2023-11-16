@@ -57,8 +57,19 @@ async function forgot(req, res, next) {
   try {
     await passwordResetTokenModel.saveToken();
     await sendEmail(formData.email, emailTemplate.subject, emailTemplate.html);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    sessionFlash.flashAlertToSession(
+      req,
+      {
+        message: 'Sorry but we got an error, please contact admin!',
+        ...formData,
+      },
+      function () {
+        res.redirect('/auth/forgot');
+      }
+    );
+    return;
   }
 
   sessionFlash.flashAlertToSession(
@@ -72,7 +83,6 @@ async function forgot(req, res, next) {
     },
     false
   );
-  return;
 }
 
 async function getReset(req, res, next) {
