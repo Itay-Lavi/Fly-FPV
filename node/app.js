@@ -60,7 +60,7 @@ app.use(errorHandlerMiddleware);
 
 db.connectToDatabase()
   .then(function () {
-    app.listen(PORT);
+    app.listen(+PORT);
     console.log('listening on port ' + PORT);
   })
   .catch(function (error) {
