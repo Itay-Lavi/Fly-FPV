@@ -5,7 +5,8 @@
 	</div>
 	<form class="cart-item-managment"
 	 data-productid="<%= item.product.id %>" data-csrf="<%= locals.csrfToken %>">
-		<input type="number" value="<%= item.quantity %>" min="0" required>
-		<button class="btn btn-alt">Update</button>
+	 <i class="fa-solid fa-circle-minus fa-xl icon-btn"></i>
+	 <input type="text" name="quantity" value="<%= item.quantity %>" min="0" required>
+	 <i class="fa-solid fa-circle-plus fa-xl icon-btn"></i>
 	</form>
 </article>

@@ -6,6 +6,10 @@ const cartBadgeElements = document.querySelectorAll('.nav-items .badge');
 async function addToCart() {
   const productId = addToCartButtonElement.dataset.productid;
   const csrfToken = addToCartButtonElement.dataset.csrf;
+  const initialText = addToCartButtonElement.innerText;
+
+  addToCartButtonElement.disabled = true;
+  addToCartButtonElement.innerText = 'Adding...';
 
   const fetchConfig = {
     method: 'POST',
@@ -21,12 +25,10 @@ async function addToCart() {
   let response;
   try {
     response = await fetch('/cart/items', fetchConfig);
+    if (!response.ok) throw 'error';
   } catch (error) {
-    alert('Something went worng!');
-    return;
-  }
-
-  if (!response.ok) {
+    addToCartButtonElement.disabled = false;
+    addToCartButtonElement.innerText = initialText;
     alert('Something went worng!');
     return;
   }
@@ -37,6 +39,8 @@ async function addToCart() {
   for (const cartBadge of cartBadgeElements) {
     cartBadge.textContent = newTotalQuantity;
   }
+
+  addToCartButtonElement.innerText = 'Added';
 }
 
 addToCartButtonElement.addEventListener('click', addToCart);
